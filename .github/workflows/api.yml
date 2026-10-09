@@ -1,0 +1,93 @@
+name: API
+
+# CI de apps/api et de la plateforme lancée par docker compose (spec 001, CA9 à CA11).
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  api:
+    name: API - lint, tests et contrat
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: fieldops
+          POSTGRES_PASSWORD: fieldops
+          POSTGRES_DB: fieldops
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U fieldops -d fieldops"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Installation des dépendances
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm --filter api lint
+
+      - name: Tests unitaires
+        run: pnpm --filter api test
+
+      - name: Tests e2e (PostgreSQL 17)
+        run: pnpm --filter api test:e2e
+
+      - name: Contrat OpenAPI à jour
+        run: |
+          pnpm --filter api openapi:generate
+          if ! git diff --exit-code apps/api/openapi.json; then
+            echo "::error::apps/api/openapi.json n'est pas à jour : lancer pnpm --filter api openapi:generate et committer le résultat."
+            exit 1
+          fi
+
+  plateforme:
+    name: Plateforme - docker compose
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Syntaxe du test de docker-compose.yml (shellcheck)
+        run: shellcheck tests/compose.sh
+
+      - name: Test de docker-compose.yml
+        run: bash tests/compose.sh
+
+      - name: Lancement de la plateforme
+        run: docker compose up --build --detach --wait --wait-timeout 180
+
+      - name: Contrôle de santé
+        run: |
+          for _ in $(seq 1 30); do
+            if curl -fsS http://localhost:3000/health; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "::error::GET /health ne répond pas 200."
+          exit 1
+
+      - name: Journaux en cas d'échec
+        if: failure()
+        run: docker compose logs
+
+      - name: Arrêt de la plateforme
+        if: always()
+        run: docker compose down --volumes

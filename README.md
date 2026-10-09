@@ -4,7 +4,7 @@ Plateforme **fictive** de maintenance industrielle avec IA intégrée : suivi de
 
 C'est un **projet portfolio** : il montre la construction d'un produit IA complet, de l'API au mobile, avec une méthode de développement agentique outillée par le template [agentic-dev-workflow](https://github.com/yanis-vroland/agentic-dev-workflow). Tout est fictif : entreprises, sites, machines, documents et personnes.
 
-**Statut : phase 0 (socle), aucune brique applicative encore en place.**
+**Statut : phase 0 (socle) : monorepo, API NestJS vide avec Swagger et contrôle de santé, PostgreSQL 17, CI.**
 
 ## Briques
 
@@ -28,12 +28,21 @@ Règles de l'agent : [`CLAUDE.md`](CLAUDE.md).
 
 ## Lancer le projet
 
-Pas encore disponible. Objectif de la phase 0 : `docker compose up` lance toute la plateforme sur un clone neuf.
-
-Après le clone, installer [gitleaks](https://github.com/gitleaks/gitleaks) (sans lui, le hook refuse tous les commits) et [jq](https://jqlang.org) (lu par les hooks de Claude Code), puis activer le hook pre-commit de détection de secrets :
+Prérequis : Docker. Pour développer : Node 24 et pnpm, [gitleaks](https://github.com/gitleaks/gitleaks) et [jq](https://jqlang.org).
 
 ```bash
-git config core.hooksPath .githooks
+docker compose up
+```
+
+L'API répond sur http://localhost:3000 : contrôle de santé sur `/health`, Swagger sur `/docs`. Les ports se changent avec `API_PORT` et `POSTGRES_PORT` (voir `.env.example`).
+
+Pour développer :
+
+```bash
+pnpm install
+git config core.hooksPath .githooks   # pre-commit : détection de secrets
+docker compose up -d postgres --wait  # PostgreSQL 17 pour les tests e2e
+pnpm --filter api test && pnpm --filter api test:e2e
 ```
 
 ## Licence

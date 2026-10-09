@@ -5,6 +5,14 @@ import type { DatabaseConfig } from '../config/configuration.js';
 export function buildTypeOrmOptions(
   database: DatabaseConfig,
 ): TypeOrmModuleOptions {
-  void database;
-  throw new Error('Not implemented');
+  return {
+    type: 'postgres',
+    host: database.host,
+    port: database.port,
+    username: database.user,
+    password: database.password,
+    database: database.name,
+    synchronize: false,
+    autoLoadEntities: true,
+  };
 }

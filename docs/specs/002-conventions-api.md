@@ -1,6 +1,6 @@
 # Spec 002 : conventions communes de l'API
 
-Statut : brouillon
+Statut : validée
 Date : 2026-10-09
 
 Phase 1. Applique l'[ADR-003](../adr/003-conventions-api.md). Toutes les specs suivantes de la phase 1 s'appuient sur ces comportements sans les répéter.

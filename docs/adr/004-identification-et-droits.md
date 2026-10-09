@@ -1,6 +1,6 @@
 # ADR-004 : Identification et droits
 
-Statut : proposé
+Statut : accepté
 Date : 2026-10-09
 
 Contexte : la phase 1 doit savoir qui appelle l'API, pour trois raisons :

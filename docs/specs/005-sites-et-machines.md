@@ -1,6 +1,6 @@
 # Spec 005 : sites et machines
 
-Statut : brouillon
+Statut : validée
 Date : 2026-10-09
 
 Phase 1. Glossaire : `Site`, `Machine` ([cahier des charges](../cahier-des-charges-fonctionnel.md#glossaire)).

@@ -2,7 +2,7 @@
 
 Vue d'ensemble fonctionnelle de FieldOps : qui fait quoi, selon quelles règles. Ce document résume et relie ; le détail testable est dans les specs (`docs/specs/`), qui font foi en cas d'écart. Le contexte (pourquoi, périmètre, phases) est dans [`vision.md`](vision.md). Ce document est la référence pour les acteurs, le glossaire et les règles métier ; il est mis à jour dans la PR qui les change. Le pendant technique est [`architecture-technique.md`](architecture-technique.md).
 
-Statut : phase 1 rédigée, en attente de validation. Les règles métier de la phase 1 reprennent les réponses par défaut proposées par l'agent et acceptées en bloc par Yanis le 2026-10-09 : chacune reste ouverte à correction à la relecture.
+Statut : phase 1 validée le 2026-10-09. Les règles métier de la phase 1 reprennent les réponses par défaut proposées par l'agent et acceptées en bloc par Yanis, ainsi que les défauts des questions ouvertes ci-dessous.
 
 ## Acteurs
 
@@ -122,21 +122,21 @@ Le copilote (phase 2) consulte, propose et n'agit qu'après confirmation de l'ut
 | Phase | Fonctionnalité | Spec | Statut |
 | --- | --- | --- | --- |
 | 0 | Socle : API vide, contrôle de santé, contrat, plateforme Docker | [001](specs/001-socle.md) | validée ; implémentation en PR #8 |
-| 1 | Conventions communes (erreurs, validation, pagination) | [002](specs/002-conventions-api.md) | brouillon |
-| 1 | Identification et droits | [003](specs/003-identification-et-droits.md) | brouillon |
-| 1 | Journal d'audit | [004](specs/004-journal-audit.md) | brouillon |
-| 1 | Sites et machines | [005](specs/005-sites-et-machines.md) | brouillon |
-| 1 | Pièces et stock | [006](specs/006-pieces-et-stock.md) | brouillon |
-| 1 | Interventions | [007](specs/007-interventions.md) | brouillon |
-| 1 | Réservations de pièces | [008](specs/008-reservations-de-pieces.md) | brouillon |
-| 1 | Données fictives et publication du contrat | [009](specs/009-donnees-fictives-et-contrat.md) | brouillon |
+| 1 | Conventions communes (erreurs, validation, pagination) | [002](specs/002-conventions-api.md) | validée |
+| 1 | Identification et droits | [003](specs/003-identification-et-droits.md) | validée |
+| 1 | Journal d'audit | [004](specs/004-journal-audit.md) | validée |
+| 1 | Sites et machines | [005](specs/005-sites-et-machines.md) | validée |
+| 1 | Pièces et stock | [006](specs/006-pieces-et-stock.md) | validée |
+| 1 | Interventions | [007](specs/007-interventions.md) | validée |
+| 1 | Réservations de pièces | [008](specs/008-reservations-de-pieces.md) | validée |
+| 1 | Données fictives et publication du contrat | [009](specs/009-donnees-fictives-et-contrat.md) | validée |
 | 2 | App mobile du technicien et copilote | à rédiger | — |
 | 3 | RAG sur la documentation des machines | à rédiger | — |
 | 4 | Serveur MCP et agents | à rédiger | — |
 
-## Questions ouvertes de la phase 1
+## Questions tranchées à la validation de la phase 1
 
-Chacune a une réponse par défaut, appliquée si rien n'est décidé d'ici la validation :
+Les réponses par défaut ont été acceptées :
 
 | Spec | Question | Défaut |
 | --- | --- | --- |

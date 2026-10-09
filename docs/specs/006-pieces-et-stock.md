@@ -1,6 +1,6 @@
 # Spec 006 : pièces et stock
 
-Statut : brouillon
+Statut : validée
 Date : 2026-10-09
 
 Phase 1. Glossaire : `Part`, `StockItem` ([cahier des charges](../cahier-des-charges-fonctionnel.md#glossaire)).

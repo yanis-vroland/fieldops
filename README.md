@@ -30,7 +30,7 @@ Règles de l'agent : [`CLAUDE.md`](CLAUDE.md).
 
 Pas encore disponible. Objectif de la phase 0 : `docker compose up` lance toute la plateforme sur un clone neuf.
 
-Après le clone, activer le hook pre-commit (détection de secrets par [gitleaks](https://github.com/gitleaks/gitleaks)) :
+Après le clone, installer [gitleaks](https://github.com/gitleaks/gitleaks) (sans lui, le hook refuse tous les commits) et [jq](https://jqlang.org) (lu par les hooks de Claude Code), puis activer le hook pre-commit de détection de secrets :
 
 ```bash
 git config core.hooksPath .githooks

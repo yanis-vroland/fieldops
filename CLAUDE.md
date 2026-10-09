@@ -12,7 +12,7 @@ Phase en cours : 0 (socle). Ordre des phases et critères de fin : [`docs/vision
 
 ## Stack et commandes
 
-Stack décidée (ADR-001) : ne pas la remettre en question.
+Stack décidée ([ADR-001](docs/adr/001-choix-de-la-stack.md)) : ne pas la remettre en question.
 
 - Serveur : TypeScript, NestJS, Node 24, pnpm workspaces.
 - Base de données : PostgreSQL 17, avec pgvector pour le RAG.
@@ -49,13 +49,13 @@ Commandes disponibles aujourd'hui (garde-fous) :
    - sans changement de comportement (refactor, perf, test, chore, ci, docs) : la description de la PR suffit. Si le changement modifie un comportement malgré son préfixe, il relève des cas précédents.
 
    Pour les deux premiers cas, sans spec, proposer d'en rédiger une et attendre la validation.
-2. Test-first ([ADR-003](https://github.com/yanis-vroland/agentic-dev-workflow/blob/main/docs/adr/003-strategie-test-first.md)) :
+2. Test-first ([ADR-003 du template](https://github.com/yanis-vroland/agentic-dev-workflow/blob/main/docs/adr/003-strategie-test-first.md)) :
    - écrire les tests à partir des critères d'acceptation (subagent `test-writer`), vérifier qu'ils échouent pour la bonne raison, et les committer avant l'implémentation, dans un commit séparé ;
    - relire les tests avant d'implémenter, et renforcer toute vérification qui passerait sans implémentation ;
    - implémenter jusqu'au vert ;
    - sur les garde-fous (hooks, scripts de sécurité, vérifications de CI), contrôle par mutation : désactiver chaque protection une fois et vérifier qu'au moins un test échoue.
 3. Ne jamais modifier ou supprimer un test pour le faire passer sans le signaler explicitement.
-4. Face à un choix d'architecture structurant, s'arrêter et proposer un ADR dans `docs/adr/` au lieu de trancher seul. L'agent peut rédiger l'ADR en entier, au statut « proposé » ; il ne passe à « accepté » et n'est mergé qu'après validation humaine ([ADR-002](https://github.com/yanis-vroland/agentic-dev-workflow/blob/main/docs/adr/002-place-revue-humaine.md)).
+4. Face à un choix d'architecture structurant, s'arrêter et proposer un ADR dans `docs/adr/` au lieu de trancher seul. L'agent peut rédiger l'ADR en entier, au statut « proposé » ; il ne passe à « accepté » et n'est mergé qu'après validation humaine ([ADR-002 du template](https://github.com/yanis-vroland/agentic-dev-workflow/blob/main/docs/adr/002-place-revue-humaine.md)).
 
 ## Définition du « done »
 
@@ -70,7 +70,7 @@ Commandes disponibles aujourd'hui (garde-fous) :
 - Committer un secret, une clé ou un token.
 - Ajouter une dépendance sans la justifier dans la PR.
 - Pousser directement sur `main`.
-- Merger une PR : seul l'humain merge ([ADR-002](https://github.com/yanis-vroland/agentic-dev-workflow/blob/main/docs/adr/002-place-revue-humaine.md)).
+- Merger une PR : seul l'humain merge ([ADR-002 du template](https://github.com/yanis-vroland/agentic-dev-workflow/blob/main/docs/adr/002-place-revue-humaine.md)).
 
 ## Architecture
 

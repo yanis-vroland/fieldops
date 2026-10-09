@@ -69,7 +69,7 @@ Règles d'architecture :
 
 ## Stack
 
-Décidée. L'ADR-001 en donne la justification.
+Décidée. L'[ADR-001](adr/001-choix-de-la-stack.md) en donne la justification.
 
 - **Serveur** : TypeScript, NestJS, Node 24, pnpm workspaces
 - **Base de données** : PostgreSQL 17, avec pgvector pour le RAG

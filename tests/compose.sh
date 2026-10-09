@@ -80,6 +80,24 @@ check "CA12 : POSTGRES_PASSWORD de postgres = défaut de l'API (fieldops)" \
 check "CA12 : POSTGRES_DB de postgres = défaut de l'API (fieldops)" \
   '.services.postgres.environment.POSTGRES_DB == "fieldops"'
 
+# Le service api reçoit les mêmes valeurs que les défauts de l'API (DEFAULTS
+# dans apps/api/src/config/configuration.ts), sauf l'hôte, qui est le service postgres.
+check "CA12 : DATABASE_USER de api = défaut de l'API (fieldops)" \
+  '.services.api.environment.DATABASE_USER == "fieldops"'
+check "CA12 : DATABASE_PASSWORD de api = défaut de l'API (fieldops)" \
+  '.services.api.environment.DATABASE_PASSWORD == "fieldops"'
+check "CA12 : DATABASE_NAME de api = défaut de l'API (fieldops)" \
+  '.services.api.environment.DATABASE_NAME == "fieldops"'
+check "CA12 : DATABASE_PORT de api = défaut de l'API (5432)" \
+  '.services.api.environment.DATABASE_PORT | tostring == "5432"'
+check "CA12 : DATABASE_HOST de api = service postgres" \
+  '.services.api.environment.DATABASE_HOST == "postgres"'
+check "CA12 : PORT de api = défaut de l'API (3000), port cible publié" \
+  '(.services.api.environment.PORT | tostring == "3000") and ([.services.api.ports[]? | select(.target == 3000)] | length == 1)'
+
+check "CA14 : postgres publié sur 127.0.0.1 seulement" \
+  '[.services.postgres.ports[]? | .host_ip] == ["127.0.0.1"]'
+
 check_port "CA14 : sans API_PORT, api publiée sur 3000" api 3000 3000
 check_port "CA14 : sans POSTGRES_PORT, postgres publié sur 5432" postgres 5432 5432
 

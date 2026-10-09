@@ -21,7 +21,7 @@ describe('Erreurs (spec 001)', () => {
 
     expect(response.status).toBe(404);
     expect(response.headers['content-type']).toMatch(/application\/json/);
-    expect(typeof response.body).toBe('object');
-    expect(Object.keys(response.body).length).toBeGreaterThan(0);
+    expect(response.body.statusCode).toBe(404);
+    expect(typeof response.body.message).toBe('string');
   });
 });

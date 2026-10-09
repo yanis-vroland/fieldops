@@ -13,5 +13,6 @@ RUN pnpm --filter api build
 
 WORKDIR /repo/apps/api
 ENV NODE_ENV=production
+USER node
 EXPOSE 3000
 CMD ["node", "dist/main.js"]

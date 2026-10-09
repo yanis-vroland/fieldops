@@ -47,7 +47,7 @@ Configuration
 
 - CA12 : Étant donné l'API, quand elle démarre sans variable d'environnement, alors elle utilise des valeurs par défaut fictives qui correspondent au `docker-compose.yml`. `.env.example` documente toutes les variables.
 - CA13 : Étant donné une variable d'environnement invalide (un port non numérique, ou hors de la plage 1 à 65535), quand l'API démarre, alors elle s'arrête avec un code de sortie non nul et un message qui nomme la variable en cause. Une variable vide est traitée comme absente : la valeur par défaut s'applique.
-- CA14 : Étant donné les variables `API_PORT` et `POSTGRES_PORT`, quand on lance `docker compose up` avec d'autres valeurs, alors l'API et PostgreSQL sont exposés sur ces ports de la machine.
+- CA14 : Étant donné les variables `API_PORT` et `POSTGRES_PORT`, quand on lance `docker compose up` avec d'autres valeurs, alors l'API et PostgreSQL sont exposés sur ces ports de la machine. PostgreSQL n'est publié que sur `127.0.0.1` ; l'API l'est sur toutes les interfaces, pour être joignable depuis un téléphone en phase 2.
 - CA15 : Étant donné la configuration TypeORM de l'API, quand un test unitaire la lit, alors `synchronize` vaut `false` (ADR-002).
 
 Erreurs

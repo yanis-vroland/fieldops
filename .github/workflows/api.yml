@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   api:
-    name: API - lint, tests et contrat
+    name: API - lint, format, tests et contrat
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -43,6 +43,9 @@ jobs:
 
       - name: Lint
         run: pnpm --filter api lint
+
+      - name: Format
+        run: pnpm --filter api format:check
 
       - name: Tests unitaires
         run: pnpm --filter api test

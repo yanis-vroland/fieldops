@@ -1,6 +1,6 @@
 # Spec 003 : identification et droits
 
-Statut : brouillon
+Statut : validée
 Date : 2026-10-09
 
 Phase 1. Applique l'[ADR-004](../adr/004-identification-et-droits.md). Les droits de chaque ressource sont précisés dans sa spec ; celle-ci fixe le mécanisme commun.

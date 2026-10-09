@@ -1,6 +1,6 @@
 # Spec 007 : interventions
 
-Statut : brouillon
+Statut : validée
 Date : 2026-10-09
 
 Phase 1. Glossaire : `Intervention` ([`docs/vision.md`](../vision.md#domaine-métier)). Les réservations de pièces liées à une intervention sont dans la spec 008.

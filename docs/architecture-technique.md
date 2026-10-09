@@ -8,8 +8,8 @@ Vue d'ensemble technique de FieldOps : briques, données, contrats, sécurité, 
 | --- | --- | --- |
 | [001](adr/001-choix-de-la-stack.md) | TypeScript et NestJS pour le serveur, Flutter pour le mobile, PostgreSQL 17, pnpm workspaces, Docker Compose | accepté |
 | [002](adr/002-choix-orm.md) | TypeORM, `synchronize` désactivé, migrations versionnées | accepté |
-| [003](adr/003-conventions-api.md) | Conventions de l'API : `/v1`, UUID, RFC 9457, pagination `limit`/`offset`, archivage | proposé |
-| [004](adr/004-identification-et-droits.md) | JWT signé par l'API, argon2id, rôles `technician` et `manager` | proposé |
+| [003](adr/003-conventions-api.md) | Conventions de l'API : `/v1`, UUID, RFC 9457, pagination `limit`/`offset`, archivage | accepté |
+| [004](adr/004-identification-et-droits.md) | JWT signé par l'API, argon2id, rôles `technician` et `manager` | accepté |
 
 Les ADR de la méthode de travail (revue humaine, test-first) sont ceux du [template](https://github.com/yanis-vroland/agentic-dev-workflow/tree/main/docs/adr).
 

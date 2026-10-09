@@ -1,6 +1,6 @@
 # Spec 004 : journal d'audit
 
-Statut : brouillon
+Statut : validée
 Date : 2026-10-09
 
 Phase 1. Principe « Audit » de [`docs/vision.md`](../vision.md#principes-transverses), étendu à toutes les écritures (pas seulement celles de l'IA), pour que la phase 2 n'ait rien à ajouter côté API.

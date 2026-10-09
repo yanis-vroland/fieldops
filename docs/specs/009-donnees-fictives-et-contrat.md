@@ -1,6 +1,6 @@
 # Spec 009 : données fictives et publication du contrat
 
-Statut : brouillon
+Statut : validée
 Date : 2026-10-09
 
 Phase 1, dernière spec. Critère de fin de la phase : « les specs de la phase sont implémentées, le contrat OpenAPI est publié » ([`docs/vision.md`](../vision.md#ordre-de-construction)).

@@ -15,19 +15,11 @@ C'est un **projet portfolio** : il démontre la construction d'un produit IA com
 - **Technicien de maintenance** : sur le terrain, avec l'app mobile. Il consulte ses interventions, vérifie le stock, rédige ses rapports et pose des questions sur la documentation des machines.
 - **Responsable maintenance** : il planifie, affecte les interventions et suit l'état du parc.
 
+Leurs droits sont détaillés dans le [cahier des charges](cahier-des-charges-fonctionnel.md#acteurs).
+
 ## Domaine métier
 
-Vocabulaire indicatif. Les specs font foi, et ce glossaire évoluera avec elles. Le code est en anglais.
-
-| Terme | Nom dans le code | Définition |
-| --- | --- | --- |
-| Site | `Site` | Usine ou atelier où se trouvent des machines |
-| Machine | `Machine` | Équipement maintenu, rattaché à un site, identifié de façon unique |
-| Intervention | `Intervention` | Opération de maintenance (préventive ou corrective) sur une machine, avec un statut et un technicien affecté |
-| Pièce | `Part` | Référence de pièce détachée |
-| Stock | `StockItem` | Quantité disponible d'une pièce, sur un site |
-| Réservation | `PartReservation` | Pièce réservée pour une intervention |
-| Technicien | `Technician` | Personne qui réalise les interventions |
+Machines, sites, interventions, pièces, stock et réservations. Le glossaire (termes et noms dans le code), les acteurs, leurs droits et les règles métier sont dans le [cahier des charges fonctionnel](cahier-des-charges-fonctionnel.md).
 
 L'identifiant de machine est partagé par toutes les briques : l'API, le RAG (pour filtrer la documentation par machine) et les agents.
 
@@ -43,24 +35,16 @@ fieldops/
 │   ├── mcp/          Serveur MCP exposant l'API cœur
 │   └── agents/       Système multi-agents qui organise une intervention
 ├── docs/
-│   ├── vision.md     Ce document
-│   ├── cahier-des-charges-fonctionnel.md
-│   ├── architecture-technique.md
+│   ├── vision.md     Ce document : pourquoi, pour qui, dans quel ordre
+│   ├── cahier-des-charges-fonctionnel.md   Le quoi : acteurs, glossaire, règles métier
+│   ├── architecture-technique.md           Le comment : données, contrats, sécurité, infra
 │   ├── adr/          Décisions d'architecture (proposées par l'agent, validées par Yanis)
 │   ├── specs/        Specs fonctionnelles
 │   └── journal.md    Journal de bord
 └── docker-compose.yml
 ```
 
-```mermaid
-flowchart LR
-  mobile[apps/mobile<br/>Flutter + copilote] -->|REST / OpenAPI| api[apps/api<br/>NestJS + PostgreSQL]
-  mobile -->|REST| rag[services/rag<br/>RAG + évals]
-  mobile -->|REST| agents[services/agents<br/>multi-agents]
-  agents -->|MCP| mcp[services/mcp<br/>serveur MCP]
-  agents -->|REST| rag
-  mcp -->|REST / OpenAPI| api
-```
+Schéma des flux entre briques, modèle de données et contrats : [architecture technique](architecture-technique.md).
 
 Règles d'architecture :
 

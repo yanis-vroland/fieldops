@@ -3,7 +3,7 @@
 Statut : brouillon
 Date : 2026-10-09
 
-Phase 1. Glossaire : `Site`, `Machine` ([`docs/vision.md`](../vision.md#domaine-métier)).
+Phase 1. Glossaire : `Site`, `Machine` ([cahier des charges](../cahier-des-charges-fonctionnel.md#glossaire)).
 
 ## Besoin
 

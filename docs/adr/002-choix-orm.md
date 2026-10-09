@@ -16,7 +16,7 @@ Options envisagées :
 Décision : TypeORM, avec `@nestjs/typeorm`, pour les briques serveur NestJS.
 - `synchronize` est désactivé dans tous les environnements : le schéma n'évolue que par des migrations versionnées.
 - Les migrations sont générées à partir des entités, relues, et committées avec le code qui les utilise.
-- Les entités portent les noms du glossaire de [`docs/vision.md`](../vision.md#domaine-métier).
+- Les entités portent les noms du glossaire du [cahier des charges](../cahier-des-charges-fonctionnel.md#glossaire) (lien mis à jour : le glossaire était dans la vision à la date de cet ADR).
 
 Conséquences :
 - Les entités et les modules suivent les conventions de la documentation officielle de NestJS, que l'agent connaît bien.

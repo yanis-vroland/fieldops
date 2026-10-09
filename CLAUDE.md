@@ -104,6 +104,8 @@ Hors périmètre : données réelles, intégration ERP, paiement et facturation,
 
 Documentation :
 - `docs/vision.md` : vision du projet, référence de contexte.
+- `docs/cahier-des-charges-fonctionnel.md` : acteurs, droits, règles métier, parcours, fonctionnalités par phase (résumé des specs).
+- `docs/architecture-technique.md` : modules, modèle de données, cohérence, sécurité, contrat, infrastructure (résumé des ADR). À mettre à jour dans la PR qui change ce qu'ils décrivent.
 - `docs/specs/` : specs, numérotées (`001-…md`), rédigées avec `/spec` à partir de `docs/templates/spec.md`.
 - `docs/adr/` : décisions d'architecture, numérotées, rédigées par l'agent au statut « proposé », acceptées par l'humain.
 - `docs/journal.md` : journal de bord du travail avec l'agent.

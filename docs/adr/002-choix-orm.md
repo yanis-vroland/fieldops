@@ -1,6 +1,6 @@
 # ADR-002 : Choix de l'ORM
 
-Statut : proposé
+Statut : accepté
 Date : 2026-10-09
 
 Contexte : l'[ADR-001](001-choix-de-la-stack.md) fixe NestJS et PostgreSQL 17 pour le serveur, et laisse l'ORM ouvert. Il faut le choisir avant le socle (phase 0), où l'API se connecte déjà à PostgreSQL pour son contrôle de santé, et avant la phase 1, qui introduit le modèle métier (`Site`, `Machine`, `Intervention`, `Part`, `StockItem`, `PartReservation`, `Technician`). Contraintes :
@@ -20,6 +20,6 @@ Décision : TypeORM, avec `@nestjs/typeorm`, pour les briques serveur NestJS.
 
 Conséquences :
 - Les entités et les modules suivent les conventions de la documentation officielle de NestJS, que l'agent connaît bien.
-- Le typage des requêtes complexes est moins strict qu'avec Prisma : les requêtes non triviales doivent être couvertes par des tests sur une vraie base PostgreSQL, pas par des mocks.
+- Le typage des requêtes complexes est moins strict qu'avec Prisma : les requêtes non triviales doivent être couvertes par des tests sur une vraie base PostgreSQL, pas par des mocks. C'est déjà le cas des tests e2e du socle ([spec 001](../specs/001-socle.md)).
 - Avec `synchronize` désactivé, chaque évolution du modèle exige une migration : plus de fichiers par PR, mais un schéma maîtrisé.
-- Le support de pgvector par TypeORM est limité : le RAG (phase 3) pourra avoir besoin de SQL brut pour les colonnes et les requêtes vectorielles. À réévaluer à ce moment-là.
+- Le support de pgvector par TypeORM est limité : le RAG (phase 3) pourra avoir besoin de SQL brut pour les colonnes et les requêtes vectorielles. La spec du RAG devra trancher : TypeORM avec SQL brut pour la partie vectorielle, ou autre choix pour cette brique, par un nouvel ADR.

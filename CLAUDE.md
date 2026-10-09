@@ -1,6 +1,10 @@
 # CLAUDE.md
 
-Règles de travail de l'agent de code sur FieldOps. Le contexte complet du projet (domaine, briques, phases, principes) est dans [`docs/vision.md`](docs/vision.md) : le lire avant toute spec ou tout choix structurant.
+Règles de travail de l'agent de code sur FieldOps. Le contexte complet du projet est dans [`docs/vision.md`](docs/vision.md). L'essentiel est résumé ci-dessous ; lire dans la vision la section utile à la tâche :
+- spec d'une fonctionnalité : « Domaine métier » (glossaire) et « Utilisateurs » ;
+- travail sur une brique ou un contrat : « Architecture » et « Ordre de construction » (objectif et critère de fin de la phase) ;
+- fonctionnalité IA : « Principes transverses » ;
+- doute sur le périmètre : « Hors périmètre ».
 
 ## Projet
 

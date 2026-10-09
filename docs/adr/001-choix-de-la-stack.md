@@ -1,6 +1,6 @@
 # ADR-001 : Choix de la stack
 
-Statut : proposé
+Statut : accepté
 Date : 2026-10-09
 
 Contexte : FieldOps est une plateforme fictive de maintenance industrielle, construite comme projet portfolio ([`docs/vision.md`](../vision.md)). Elle réunit cinq briques dans un monorepo : une API cœur (`apps/api`), une app mobile de technicien avec copilote IA (`apps/mobile`), un RAG sur la documentation technique (`services/rag`), un serveur MCP (`services/mcp`) et un système multi-agents (`services/agents`). Contraintes :

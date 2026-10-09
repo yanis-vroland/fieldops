@@ -1,4 +1,5 @@
-# Image de développement de l'API, construite depuis la racine du monorepo.
+# Image de l'API pour docker compose en local, construite depuis la racine du monorepo.
+# Non optimisée pour la production (hors périmètre de la spec 001) : elle garde les devDependencies.
 FROM node:24-alpine
 
 WORKDIR /repo

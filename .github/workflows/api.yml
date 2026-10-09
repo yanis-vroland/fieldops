@@ -56,7 +56,9 @@ jobs:
       - name: Contrat OpenAPI à jour
         run: |
           pnpm --filter api openapi:generate
-          if ! git diff --exit-code apps/api/openapi.json; then
+          # Fichier modifié, absent ou non suivi : tous visibles dans git status.
+          if [ -n "$(git status --porcelain -- apps/api/openapi.json)" ]; then
+            git diff -- apps/api/openapi.json
             echo "::error::apps/api/openapi.json n'est pas à jour : lancer pnpm --filter api openapi:generate et committer le résultat."
             exit 1
           fi

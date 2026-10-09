@@ -78,7 +78,7 @@ describe('Contrat OpenAPI servi par l’API (spec 001)', () => {
     expect(response.body.paths?.['/health']?.get).toBeDefined();
   });
 
-  it("CA8 : le contrat généré décrit les mêmes routes que l'API démarrée", async () => {
+  it("CA8 : le contrat généré est identique à celui de l'API démarrée", async () => {
     const output = path.join(workDir, 'openapi-compare.json');
 
     const result = await generateContract(output);
@@ -86,8 +86,7 @@ describe('Contrat OpenAPI servi par l’API (spec 001)', () => {
 
     const generated = JSON.parse(await readFile(output, 'utf8'));
     const live = await request(app.getHttpServer()).get('/docs-json');
-    expect(Object.keys(generated.paths).sort()).toEqual(
-      Object.keys(live.body.paths).sort(),
-    );
+    // Document entier : chemins, opérations, réponses et schémas.
+    expect(generated).toEqual(live.body);
   }, 30_000);
 });

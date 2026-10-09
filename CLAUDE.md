@@ -1,22 +1,38 @@
 # CLAUDE.md
 
-Contexte projet pour l'agent de code. Les sections marquées « À ADAPTER » sont propres à chaque projet.
+Règles de travail de l'agent de code sur FieldOps. Le contexte complet du projet (domaine, briques, phases, principes) est dans [`docs/vision.md`](docs/vision.md) : le lire avant toute spec ou tout choix structurant.
 
 ## Projet
 
-FieldOps : plateforme fictive de maintenance industrielle avec IA intégrée, destinée aux équipes de maintenance (techniciens terrain, responsables maintenance). Projet vitrine qui sert aussi de premier terrain d'essai au template [agentic-dev-workflow](https://github.com/yanis-vroland/agentic-dev-workflow).
+FieldOps : plateforme fictive de maintenance industrielle (machines, interventions, pièces, stocks) avec de l'IA intégrée au produit. Projet portfolio qui démontre un produit IA complet (API, mobile, RAG, MCP, agents) et sert de preuve d'usage du template [agentic-dev-workflow](https://github.com/yanis-vroland/agentic-dev-workflow).
+
+Tout est fictif : entreprises, sites, machines, documents et personnes. Aucune donnée réelle, aucun code ni nom issu d'un client ou d'un employeur. Les jeux de données, fixtures et exemples sont inventés.
+
+Phase en cours : 0 (socle). Ordre des phases et critères de fin : [`docs/vision.md`](docs/vision.md#ordre-de-construction).
 
 ## Stack et commandes
 
-Stack applicative pas encore choisie : le choix fera l'objet d'un ADR (`docs/adr/`) avant la première ligne de code applicatif. Ne pas initialiser de framework sans ADR accepté.
+Stack décidée (ADR-001) : ne pas la remettre en question.
+
+- Serveur : TypeScript, NestJS, Node 24, pnpm workspaces.
+- Base de données : PostgreSQL 17, avec pgvector pour le RAG.
+- Mobile : Dart, Flutter (Android et iOS).
+- IA : SDK et frameworks TypeScript (Vercel AI SDK ou API directe, LangChain.js, LangGraph.js, SDK MCP officiel), Langfuse pour l'observabilité.
+- Infrastructure : Docker Compose.
+- ORM : pas encore choisi (ADR-002). N'en installer aucun et n'écrire aucun code qui en dépend avant l'acceptation de l'ADR-002.
+
+Commandes prévues, pas encore en place (aucune brique initialisée) :
+- Installer : `pnpm install`
+- Lancer toute la plateforme : `docker compose up`
+- Tests d'une brique : `pnpm --filter <brique> test`
+- Lint d'une brique : `pnpm --filter <brique> lint`
+- Mobile : `flutter test` et `flutter analyze` dans `apps/mobile`
 
 Commandes disponibles aujourd'hui (garde-fous) :
 - Tests des hooks de Claude Code : `bash tests/hooks.sh`
 - Test du hook pre-commit : `bash tests/pre-commit.sh`
 - Test de la vérification de la revue IA : `bash tests/verifier-revue-ia.sh`
 - Lint des scripts shell : `shellcheck .claude/hooks/*.sh .githooks/pre-commit .github/scripts/*.sh tests/*.sh`
-
-À compléter (installer, lancer, tests, lint) une fois la stack choisie.
 
 ## Langue
 
@@ -58,12 +74,33 @@ Commandes disponibles aujourd'hui (garde-fous) :
 
 ## Architecture
 
-Pas encore de code applicatif. Organisation actuelle :
-- `docs/specs/` : specs fonctionnelles, numérotées (`001-…md`), rédigées avec `/spec` à partir de `docs/templates/spec.md`.
-- `docs/adr/` : décisions d'architecture, numérotées (`001-…md`).
+Monorepo de briques indépendantes (détail et schéma : [`docs/vision.md`](docs/vision.md#architecture--un-monorepo-des-briques-indépendantes)) :
+
+- `apps/api` : API cœur, NestJS + PostgreSQL.
+- `apps/mobile` : app Flutter du technicien, avec copilote IA.
+- `services/rag` : assistant sur la documentation technique, évalué et observé.
+- `services/mcp` : serveur MCP exposant l'API cœur.
+- `services/agents` : système multi-agents qui organise une intervention.
+
+Règles :
+- Contrats explicites uniquement : REST documentée en OpenAPI, ou MCP. Aucun import de code d'une brique vers une autre, pas de package partagé.
+- Un changement de contrat est un changement de comportement observable : il exige une spec.
+- Chaque brique est démontrable seule : README, démo, tests et commandes de lancement.
+- Les appels aux modèles d'IA partent toujours du serveur, jamais de l'app mobile.
+- Noms du code : ceux du glossaire de [`docs/vision.md`](docs/vision.md#domaine-métier) (`Site`, `Machine`, `Intervention`, `Part`, `StockItem`, `PartReservation`, `Technician`). Les specs font foi en cas d'écart.
+
+Principes à respecter dans toute fonctionnalité IA :
+- Humain dans la boucle : toute écriture déclenchée par l'IA est confirmée par un humain avant exécution.
+- Audit : chaque appel d'outil par l'IA est journalisé (qui, quoi, quand, avec quels arguments).
+- Moindre privilège : chaque agent n'accède qu'aux outils dont il a besoin.
+- Mesure : la qualité de l'IA se prouve par des évaluations chiffrées.
+- Sécurité : injection de prompt (directe et indirecte) testée, PII masquée avant envoi au modèle.
+
+Hors périmètre : données réelles, intégration ERP, paiement et facturation, interface web d'administration, multi-entreprise.
+
+Documentation :
+- `docs/vision.md` : vision du projet, référence de contexte.
+- `docs/specs/` : specs, numérotées (`001-…md`), rédigées avec `/spec` à partir de `docs/templates/spec.md`.
+- `docs/adr/` : décisions d'architecture, numérotées, rédigées par l'agent au statut « proposé », acceptées par l'humain.
 - `docs/journal.md` : journal de bord du travail avec l'agent.
 - `.claude/`, `.githooks/`, `.github/`, `tests/` : garde-fous issus du template, à ne modifier qu'avec une spec.
-
-Domaine métier envisagé (à confirmer par spec) : sites, équipements (machines), interventions de maintenance, techniciens, et une assistance IA (aide au diagnostic, résumé d'interventions).
-
-À compléter : modules, conventions de nommage et emplacement du code une fois la stack choisie.

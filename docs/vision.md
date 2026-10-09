@@ -76,7 +76,7 @@ Décidée. L'[ADR-001](adr/001-choix-de-la-stack.md) en donne la justification.
 - **Mobile** : Dart, Flutter (Android et iOS)
 - **IA** : SDK et frameworks TypeScript (Vercel AI SDK ou API directe, LangChain.js, LangGraph.js, SDK MCP officiel), Langfuse pour l'observabilité
 - **Infrastructure** : Docker Compose ; déploiement Kubernetes possible plus tard
-- **ORM** : non choisi, ce sera l'ADR-002
+- **ORM** : TypeORM ([ADR-002](adr/002-choix-orm.md))
 
 ## Ordre de construction
 

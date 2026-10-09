@@ -1,6 +1,6 @@
 # Spec 008 : réservations de pièces
 
-Statut : brouillon
+Statut : validée
 Date : 2026-10-09
 
 Phase 1. Glossaire : `PartReservation` ([`docs/vision.md`](../vision.md#domaine-métier)). S'appuie sur les specs 006 (stock) et 007 (interventions).

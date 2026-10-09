@@ -1,6 +1,6 @@
 # Spec 005 : sites et machines
 
-Statut : brouillon
+Statut : validée
 Date : 2026-10-09
 
 Phase 1. Glossaire : `Site`, `Machine` ([`docs/vision.md`](../vision.md#domaine-métier)).

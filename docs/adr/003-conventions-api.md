@@ -1,6 +1,6 @@
 # ADR-003 : Conventions de l'API
 
-Statut : proposé
+Statut : accepté
 Date : 2026-10-09
 
 Contexte : la phase 1 ajoute à `apps/api` une dizaine de ressources (sites, machines, utilisateurs, pièces, stock, interventions, réservations, audit). Sans conventions communes, chaque spec et chaque PR réinventerait le format des erreurs, la pagination ou les identifiants. Le contrat OpenAPI est consommé par l'app mobile (phase 2) et le serveur MCP (phase 4) : il doit être régulier et stable. Le code est écrit en grande partie par un agent : des règles explicites évitent les écarts d'une ressource à l'autre.

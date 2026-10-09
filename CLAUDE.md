@@ -82,6 +82,8 @@ Le dépôt est la seule mémoire : une session doit pouvoir être fermée à tou
 ## Organisation des PR et des phases
 
 - Une seule PR ouverte à la fois, toujours basée sur `main` (`gh pr create --base main`). Si un travail dépend d'une PR non mergée, attendre son merge, ou regrouper les deux dans la même PR. Constat du 2026-10-09 : la PR #7, basée sur la branche de la #6, a été mergée dans cette branche après le merge de la #6, et n'est jamais arrivée sur `main`.
+- Pousser tous les commits avant d'annoncer qu'une PR est prête, et vérifier après le merge que son dernier commit est bien sur `main`. Constat du 2026-10-09 : la PR #9 a été mergée avant le commit qui passait les specs à « validée », rattrapé par la #11.
+- Une PR qui touche les mêmes fichiers qu'une PR encore ouverte est rebasée par l'agent après le merge de la première, au lieu de laisser la résolution du conflit à l'humain.
 - Une spec par PR (tests en échec, puis implémentation).
 - Validation groupée par phase : l'agent rédige toutes les specs d'une phase et pose toutes les questions métier en un seul lot, avec une réponse par défaut pour chacune. L'humain valide le lot, puis l'agent enchaîne les PR.
 

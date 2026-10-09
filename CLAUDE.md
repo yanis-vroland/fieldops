@@ -1,10 +1,10 @@
 # CLAUDE.md
 
-Règles de travail de l'agent de code sur FieldOps. Le contexte complet du projet est dans [`docs/vision.md`](docs/vision.md). L'essentiel est résumé ci-dessous ; lire dans la vision la section utile à la tâche :
-- spec d'une fonctionnalité : « Domaine métier » (glossaire) et « Utilisateurs » ;
-- travail sur une brique ou un contrat : « Architecture » et « Ordre de construction » (objectif et critère de fin de la phase) ;
-- fonctionnalité IA : « Principes transverses » ;
-- doute sur le périmètre : « Hors périmètre ».
+Règles de travail de l'agent de code sur FieldOps. L'essentiel du contexte est résumé ci-dessous ; lire le document utile à la tâche (section « Documents de référence ») :
+- spec d'une fonctionnalité : [`docs/cahier-des-charges-fonctionnel.md`](docs/cahier-des-charges-fonctionnel.md) (acteurs, droits, glossaire, règles métier) ;
+- travail sur une brique, les données ou un contrat : [`docs/architecture-technique.md`](docs/architecture-technique.md), et « Ordre de construction » de [`docs/vision.md`](docs/vision.md) (objectif et critère de fin de la phase) ;
+- fonctionnalité IA : « Principes transverses » de la vision ;
+- doute sur le périmètre : « Hors périmètre » de la vision.
 
 ## Projet
 
@@ -64,13 +64,14 @@ Garde-fous :
    - sur les garde-fous (hooks, scripts de sécurité, vérifications de CI), contrôle par mutation : désactiver chaque protection une fois et vérifier qu'au moins un test échoue.
 3. Ne jamais modifier ou supprimer un test pour le faire passer sans le signaler explicitement.
 4. Face à un choix d'architecture structurant, s'arrêter et proposer un ADR dans `docs/adr/` au lieu de trancher seul. L'agent peut rédiger l'ADR en entier, au statut « proposé » ; il ne passe à « accepté » et n'est mergé qu'après validation humaine ([ADR-002 du template](https://github.com/yanis-vroland/agentic-dev-workflow/blob/main/docs/adr/002-place-revue-humaine.md)).
+5. Après la revue IA d'une PR, et une fois les corrections poussées, publier un commentaire `## Réponse à la revue IA` dans la PR. Chaque point du rapport y reçoit une suite : corrigé (avec le SHA du commit), non suivi et pourquoi, ou reporté (avec l'issue). La description de la PR renvoie vers ce commentaire sans le répéter. Ne pas se contenter de modifier la description : cela ne laisse aucune trace dans la chronologie et ne notifie personne.
 
 ## Définition du « done »
 
 - Chaque critère d'acceptation de la spec est couvert par au moins un test.
 - Lint, format et tests au vert.
 - Aucun TODO sans ticket associé.
-- Documentation mise à jour si un comportement public change.
+- Documentation mise à jour si un comportement public change, dont le cahier des charges et l'architecture technique (section « Documents de référence »).
 
 ## Interdits
 
@@ -80,9 +81,26 @@ Garde-fous :
 - Pousser directement sur `main`.
 - Merger une PR : seul l'humain merge ([ADR-002 du template](https://github.com/yanis-vroland/agentic-dev-workflow/blob/main/docs/adr/002-place-revue-humaine.md)).
 
+## Documents de référence
+
+Une information vit à un seul endroit ; les autres documents y renvoient.
+
+- [`docs/vision.md`](docs/vision.md) : le pourquoi. Ce qu'est le produit, pour qui, ordre des phases et critères de fin, principes transverses, hors périmètre, répartition des rôles.
+- [`docs/cahier-des-charges-fonctionnel.md`](docs/cahier-des-charges-fonctionnel.md) : le quoi. Acteurs et droits, glossaire, règles métier, parcours, fonctionnalités par phase avec un lien vers leur spec, questions métier ouvertes.
+- [`docs/architecture-technique.md`](docs/architecture-technique.md) : le comment. Modèle de données, contrats entre briques, conventions d'API, sécurité, infrastructure, index des ADR.
+- `docs/specs/` détaille une fonctionnalité ; `docs/adr/` explique un choix.
+
+Lire le cahier des charges avant d'écrire une spec, et l'architecture technique avant de toucher aux données, à un contrat, à la sécurité ou à l'infrastructure. Les noms du code sont ceux du glossaire.
+
+Mettre à jour dans la même PR :
+- le cahier des charges : nouvelle fonctionnalité, changement d'acteur, de droit, de terme ou de règle métier, changement de statut d'une spec ;
+- l'architecture technique : changement du modèle de données, d'un contrat, de la sécurité ou de l'infrastructure, ADR accepté.
+
+Une règle métier non tranchée va dans les questions ouvertes du cahier des charges : ne jamais l'inventer.
+
 ## Architecture
 
-Monorepo de briques indépendantes (détail et schéma : [`docs/vision.md`](docs/vision.md#architecture--un-monorepo-des-briques-indépendantes)) :
+Monorepo de briques indépendantes (schéma et flux : [`docs/architecture-technique.md`](docs/architecture-technique.md#briques-et-flux)) :
 
 - `apps/api` : API cœur, NestJS + PostgreSQL.
 - `apps/mobile` : app Flutter du technicien, avec copilote IA.
@@ -95,7 +113,7 @@ Règles :
 - Un changement de contrat est un changement de comportement observable : il exige une spec.
 - Chaque brique est démontrable seule : README, démo, tests et commandes de lancement.
 - Les appels aux modèles d'IA partent toujours du serveur, jamais de l'app mobile.
-- Noms du code : ceux du glossaire de [`docs/vision.md`](docs/vision.md#domaine-métier) (`Site`, `Machine`, `Intervention`, `Part`, `StockItem`, `PartReservation`, `Technician`). Les specs font foi en cas d'écart.
+- Noms du code : ceux du glossaire du [cahier des charges](docs/cahier-des-charges-fonctionnel.md#glossaire) (`Site`, `Machine`, `Intervention`, `Part`, `StockItem`, `PartReservation`, `Technician`). Les specs font foi en cas d'écart.
 
 Principes à respecter dans toute fonctionnalité IA :
 - Humain dans la boucle : toute écriture déclenchée par l'IA est confirmée par un humain avant exécution.
@@ -106,10 +124,7 @@ Principes à respecter dans toute fonctionnalité IA :
 
 Hors périmètre : données réelles, intégration ERP, paiement et facturation, interface web d'administration, multi-entreprise.
 
-Documentation :
-- `docs/vision.md` : vision du projet, référence de contexte.
-- `docs/cahier-des-charges-fonctionnel.md` : acteurs, droits, règles métier, parcours, fonctionnalités par phase (résumé des specs).
-- `docs/architecture-technique.md` : modules, modèle de données, cohérence, sécurité, contrat, infrastructure (résumé des ADR). À mettre à jour dans la PR qui change ce qu'ils décrivent.
+Documentation (documents de référence : voir la section du même nom) :
 - `docs/specs/` : specs, numérotées (`001-…md`), rédigées avec `/spec` à partir de `docs/templates/spec.md`.
 - `docs/adr/` : décisions d'architecture, numérotées, rédigées par l'agent au statut « proposé », acceptées par l'humain.
 - `docs/journal.md` : journal de bord du travail avec l'agent.

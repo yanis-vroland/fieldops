@@ -18,7 +18,11 @@ C'est un **projet portfolio** : il montre la construction d'un produit IA comple
 
 Les briques communiquent uniquement par contrat (OpenAPI, MCP), sans code partagé. Les appels aux modèles d'IA partent toujours du serveur, et toute écriture déclenchée par l'IA est confirmée par un humain.
 
-Vision complète (domaine, architecture, phases, principes) : [`docs/vision.md`](docs/vision.md).
+Documentation :
+- [`docs/vision.md`](docs/vision.md) : vision, domaine, phases, principes ;
+- [`docs/cahier-des-charges-fonctionnel.md`](docs/cahier-des-charges-fonctionnel.md) : acteurs, droits, règles métier, parcours ;
+- [`docs/architecture-technique.md`](docs/architecture-technique.md) : modèle de données, sécurité, contrat, infrastructure ;
+- [`docs/specs/`](docs/specs) et [`docs/adr/`](docs/adr) : specs détaillées et décisions.
 
 ## Méthode
 

@@ -44,6 +44,8 @@ fieldops/
 │   └── agents/       Système multi-agents qui organise une intervention
 ├── docs/
 │   ├── vision.md     Ce document
+│   ├── cahier-des-charges-fonctionnel.md
+│   ├── architecture-technique.md
 │   ├── adr/          Décisions d'architecture (proposées par l'agent, validées par Yanis)
 │   ├── specs/        Specs fonctionnelles
 │   └── journal.md    Journal de bord

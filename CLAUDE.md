@@ -23,7 +23,7 @@ Stack décidée ([ADR-001](docs/adr/001-choix-de-la-stack.md)) : ne pas la remet
 - Mobile : Dart, Flutter (Android et iOS).
 - IA : SDK et frameworks TypeScript (Vercel AI SDK ou API directe, LangChain.js, LangGraph.js, SDK MCP officiel), Langfuse pour l'observabilité.
 - Infrastructure : Docker Compose.
-- ORM : pas encore choisi (ADR-002). N'en installer aucun et n'écrire aucun code qui en dépend avant l'acceptation de l'ADR-002.
+- ORM : TypeORM avec `@nestjs/typeorm` ([ADR-002](docs/adr/002-choix-orm.md)). `synchronize` toujours désactivé : le schéma n'évolue que par des migrations versionnées.
 
 Commandes prévues, pas encore en place (aucune brique initialisée) :
 - Installer : `pnpm install`

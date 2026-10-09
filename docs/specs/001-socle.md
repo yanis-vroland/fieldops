@@ -13,7 +13,7 @@ En tant que développeur de FieldOps (humain ou agent), je veux un monorepo pnpm
 
 - PostgreSQL : image Docker officielle `postgres:17`. Le passage à une image avec pgvector se fera en phase 3, par une spec du RAG.
 - Contrôle de santé : `@nestjs/terminus`, avec son format de réponse (`status`, `info`, `error`, `details`) ; l'indicateur de la base s'appelle `database`.
-- Tests : Jest et Supertest, outils par défaut de NestJS. Les tests e2e utilisent un vrai PostgreSQL 17 (ADR-002), jamais un mock.
+- Tests : Vitest et Supertest, outils par défaut de NestJS 12 (avec oxlint pour le lint). Les tests e2e utilisent un vrai PostgreSQL 17 (ADR-002), jamais un mock.
 - CI de l'API : nouveau workflow `.github/workflows/api.yml`. Ses jobs deviennent des vérifications obligatoires du ruleset sur `main`.
 - Attente de PostgreSQL au démarrage : `healthcheck` sur le service PostgreSQL (`pg_isready`) et `depends_on` avec `condition: service_healthy` sur l'API.
 

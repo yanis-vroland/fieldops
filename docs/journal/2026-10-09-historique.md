@@ -36,8 +36,8 @@ Fait :
 - Ruleset de `main` : vérifications obligatoires « Tests des garde-fous », « Détection de secrets », « API - lint, format, tests et contrat » et « Plateforme - docker compose ».
 
 À faire, dans l'ordre :
-1. Implémenter la phase 1, une spec par PR, dans l'ordre : [002](specs/002-conventions-api.md) conventions, [003](specs/003-identification-et-droits.md) identification et droits, [004](specs/004-journal-audit.md) audit, [005](specs/005-sites-et-machines.md) sites et machines, [006](specs/006-pieces-et-stock.md) pièces et stock, [007](specs/007-interventions.md) interventions, [008](specs/008-reservations-de-pieces.md) réservations, [009](specs/009-donnees-fictives-et-contrat.md) données fictives et contrat `1.0.0`.
+1. Implémenter la phase 1, une spec par PR, dans l'ordre : [002](../specs/002-conventions-api.md) conventions, [003](../specs/003-identification-et-droits.md) identification et droits, [004](../specs/004-journal-audit.md) audit, [005](../specs/005-sites-et-machines.md) sites et machines, [006](../specs/006-pieces-et-stock.md) pièces et stock, [007](../specs/007-interventions.md) interventions, [008](../specs/008-reservations-de-pieces.md) réservations, [009](../specs/009-donnees-fictives-et-contrat.md) données fictives et contrat `1.0.0`.
 2. Pour chaque spec : tests écrits par `test-writer` et committés en échec, relus, puis implémentation, contrôle par mutation sur ce qui protège (droits, audit, stock), mise à jour de `docs/architecture-technique.md` si le modèle change.
-3. Fin de la phase 1 : vérifier le critère de [`vision.md`](vision.md#ordre-de-construction) sur un clone neuf, puis rédiger les specs et ADR de la phase 2 (copilote : emplacement côté serveur, accès au modèle d'IA ; socle Flutter).
+3. Fin de la phase 1 : vérifier le critère de [`vision.md`](../vision.md#ordre-de-construction) sur un clone neuf, puis rédiger les specs et ADR de la phase 2 (copilote : emplacement côté serveur, accès au modèle d'IA ; socle Flutter).
 
 Reprise de session : lire `CLAUDE.md`, ce journal et les PR ouvertes, puis vérifier l'état de `main` avant d'agir.

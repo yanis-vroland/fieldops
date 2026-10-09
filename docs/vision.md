@@ -40,7 +40,7 @@ fieldops/
 │   ├── architecture-technique.md           Le comment : données, contrats, sécurité, infra
 │   ├── adr/          Décisions d'architecture (proposées par l'agent, validées par Yanis)
 │   ├── specs/        Specs fonctionnelles
-│   └── journal.md    Journal de bord
+│   └── journal/      Journal de bord, un fichier par branche
 └── docker-compose.yml
 ```
 

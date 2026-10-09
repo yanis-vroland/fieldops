@@ -12,7 +12,7 @@ FieldOps : plateforme fictive de maintenance industrielle (machines, interventio
 
 Tout est fictif : entreprises, sites, machines, documents et personnes. Aucune donnée réelle, aucun code ni nom issu d'un client ou d'un employeur. Les jeux de données, fixtures et exemples sont inventés.
 
-Phase en cours : 0 (socle). Ordre des phases et critères de fin : [`docs/vision.md`](docs/vision.md#ordre-de-construction).
+Phase en cours : 0 (socle), implémentée par la [spec 001](docs/specs/001-socle.md). Ordre des phases et critères de fin : [`docs/vision.md`](docs/vision.md#ordre-de-construction).
 
 ## Stack et commandes
 
@@ -25,14 +25,18 @@ Stack décidée ([ADR-001](docs/adr/001-choix-de-la-stack.md)) : ne pas la remet
 - Infrastructure : Docker Compose.
 - ORM : TypeORM avec `@nestjs/typeorm` ([ADR-002](docs/adr/002-choix-orm.md)). `synchronize` toujours désactivé : le schéma n'évolue que par des migrations versionnées.
 
-Commandes prévues, pas encore en place (aucune brique initialisée) :
+Commandes (depuis la racine, Node 24 et pnpm) :
 - Installer : `pnpm install`
-- Lancer toute la plateforme : `docker compose up`
-- Tests d'une brique : `pnpm --filter <brique> test`
-- Lint d'une brique : `pnpm --filter <brique> lint`
-- Mobile : `flutter test` et `flutter analyze` dans `apps/mobile`
+- Lancer toute la plateforme : `docker compose up` (API sur http://localhost:3000, Swagger sur `/docs`)
+- PostgreSQL seul, pour les tests e2e : `docker compose up -d postgres --wait`
+- API, lint : `pnpm --filter api lint`
+- API, tests unitaires : `pnpm --filter api test`
+- API, tests e2e (PostgreSQL 17 joignable) : `pnpm --filter api test:e2e`
+- API, contrat OpenAPI : `pnpm --filter api openapi:generate`, puis committer `apps/api/openapi.json` (la CI vérifie qu'il est à jour)
+- Test de `docker-compose.yml` : `bash tests/compose.sh`
+- Mobile (phase 2) : `flutter test` et `flutter analyze` dans `apps/mobile`
 
-Commandes disponibles aujourd'hui (garde-fous) :
+Garde-fous :
 - Tests des hooks de Claude Code : `bash tests/hooks.sh`
 - Test du hook pre-commit : `bash tests/pre-commit.sh`
 - Test de la vérification de la revue IA : `bash tests/verifier-revue-ia.sh`

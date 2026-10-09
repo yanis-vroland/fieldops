@@ -15,6 +15,7 @@ En tant que développeur de FieldOps (humain ou agent), je veux un monorepo pnpm
 - Contrôle de santé : `@nestjs/terminus`, avec son format de réponse (`status`, `info`, `error`, `details`) ; l'indicateur de la base s'appelle `database`.
 - Tests : Vitest et Supertest, outils par défaut de NestJS 12 (avec oxlint pour le lint). Les tests e2e utilisent un vrai PostgreSQL 17 (ADR-002), jamais un mock.
 - CI de l'API : nouveau workflow `.github/workflows/api.yml`. Ses jobs deviennent des vérifications obligatoires du ruleset sur `main`.
+- `.env.example` à la racine du dépôt : il documente les variables de l'API et les ports publiés par docker compose.
 - Attente de PostgreSQL au démarrage : `healthcheck` sur le service PostgreSQL (`pg_isready`) et `depends_on` avec `condition: service_healthy` sur l'API.
 
 ## Critères d'acceptation
@@ -45,8 +46,8 @@ Qualité et CI
 Configuration
 
 - CA12 : Étant donné l'API, quand elle démarre sans variable d'environnement, alors elle utilise des valeurs par défaut fictives qui correspondent au `docker-compose.yml`. `.env.example` documente toutes les variables.
-- CA13 : Étant donné une variable d'environnement invalide (par exemple un port non numérique), quand l'API démarre, alors elle s'arrête avec un code de sortie non nul et un message qui nomme la variable en cause.
-- CA14 : Étant donné les variables `API_PORT` et `POSTGRES_PORT`, quand on lance `docker compose up` avec d'autres valeurs, alors l'API et PostgreSQL sont exposés sur ces ports de la machine.
+- CA13 : Étant donné une variable d'environnement invalide (un port non numérique, ou hors de la plage 1 à 65535), quand l'API démarre, alors elle s'arrête avec un code de sortie non nul et un message qui nomme la variable en cause. Une variable vide est traitée comme absente : la valeur par défaut s'applique.
+- CA14 : Étant donné les variables `API_PORT` et `POSTGRES_PORT`, quand on lance `docker compose up` avec d'autres valeurs, alors l'API et PostgreSQL sont exposés sur ces ports de la machine. PostgreSQL n'est publié que sur `127.0.0.1` ; l'API l'est sur toutes les interfaces, pour être joignable depuis un téléphone en phase 2.
 - CA15 : Étant donné la configuration TypeORM de l'API, quand un test unitaire la lit, alors `synchronize` vaut `false` (ADR-002).
 
 Erreurs

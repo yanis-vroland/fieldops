@@ -1,0 +1,73 @@
+name: Garde-fous
+
+# Workflow générique, copié dans les projets par scripts/init.sh du template agentic-dev-workflow.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# Version de gitleaks, fixée. Renovate propose sa mise à jour (renovate.json) ;
+# l'archive est vérifiée avec le fichier d'empreintes publié avec la release.
+env:
+  # renovate: datasource=github-releases depName=gitleaks/gitleaks
+  GITLEAKS_VERSION: 8.30.1
+
+jobs:
+  garde-fous:
+    name: Tests des garde-fous
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Syntaxe des hooks, des scripts et de leurs tests (shellcheck)
+        run: >-
+          shellcheck .claude/hooks/*.sh .githooks/pre-commit .github/scripts/*.sh
+          tests/hooks.sh tests/pre-commit.sh tests/verifier-revue-ia.sh
+
+      - name: Tests des hooks de Claude Code
+        run: bash tests/hooks.sh
+
+      - name: Test de la vérification de la revue IA
+        run: bash tests/verifier-revue-ia.sh
+
+      - name: Installation de gitleaks
+        run: |
+          archive="gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          base="https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}"
+          curl -fsSLO "${base}/${archive}"
+          curl -fsSL "${base}/gitleaks_${GITLEAKS_VERSION}_checksums.txt" -o checksums.txt
+          # Exactement une ligne pour l'archive, sinon échec
+          [ "$(grep -c "  ${archive}$" checksums.txt)" -eq 1 ]
+          grep "  ${archive}$" checksums.txt | sha256sum --check --strict
+          sudo tar -xzf "${archive}" -C /usr/local/bin gitleaks
+          gitleaks version
+
+      - name: Test du hook pre-commit
+        run: bash tests/pre-commit.sh
+
+  secrets:
+    name: Détection de secrets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Installation de gitleaks
+        run: |
+          archive="gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          base="https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}"
+          curl -fsSLO "${base}/${archive}"
+          curl -fsSL "${base}/gitleaks_${GITLEAKS_VERSION}_checksums.txt" -o checksums.txt
+          # Exactement une ligne pour l'archive, sinon échec
+          [ "$(grep -c "  ${archive}$" checksums.txt)" -eq 1 ]
+          grep "  ${archive}$" checksums.txt | sha256sum --check --strict
+          sudo tar -xzf "${archive}" -C /usr/local/bin gitleaks
+          gitleaks version
+
+      - name: Analyse de tout l'historique
+        run: gitleaks git --redact --verbose --no-banner .

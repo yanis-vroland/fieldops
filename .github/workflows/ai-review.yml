@@ -1,0 +1,50 @@
+name: Revue IA
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review]
+
+jobs:
+  review:
+    name: Revue IA de la PR
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # Épinglée par SHA : ce code manipule le jeton Claude, une étiquette (@v1) peut
+      # être déplacée par son auteur. Sur le template, Renovate propose la mise à jour ;
+      # sinon, remplacer à la main le SHA et la version en commentaire (commit d'une
+      # release de anthropics/claude-code-action).
+      - id: review
+        uses: anthropics/claude-code-action@2dca132ff0e0c4094ce6048b422c6915a071210b # v1.0.247
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            REPO : ${{ github.repository }}
+            PR : ${{ github.event.pull_request.number }}
+
+            Fais la revue de cette PR en appliquant les consignes du fichier .claude/agents/reviewer.md.
+            Utilise `gh pr diff` pour voir les changements.
+            Rédige ton rapport en français dans le fichier ${{ runner.temp }}/revue-ia.md avec l'outil Write,
+            puis publie-le en un seul commentaire :
+            gh pr comment ${{ github.event.pull_request.number }} --body-file ${{ runner.temp }}/revue-ia.md
+            N'utilise jamais --body : le hook protect-secrets refuse toute commande dont le texte
+            cite un nom de fichier d'environnement, et le rapport ne serait pas publié.
+            N'exécute aucune autre commande que gh pr diff, gh pr view et gh pr comment (pas de tests,
+            pas de scripts) : toute action refusée fait échouer ce job.
+          claude_args: '--allowed-tools "Read,Grep,Glob,Write,Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr comment:*)"'
+
+      # Échoue si la revue n'a pas tourné (action sautée) ou si des actions ont été refusées
+      - name: Vérification de la revue
+        if: always()
+        run: >-
+          .github/scripts/verifier-revue-ia.sh
+          "${{ steps.review.outputs.execution_file || format('{0}/claude-execution-output.json', runner.temp) }}"

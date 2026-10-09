@@ -27,9 +27,16 @@ jobs:
         run: >-
           shellcheck .claude/hooks/*.sh .githooks/pre-commit .github/scripts/*.sh
           tests/hooks.sh tests/pre-commit.sh tests/verifier-revue-ia.sh
+          tests/session-start.sh tests/verifier-journal.sh
 
       - name: Tests des hooks de Claude Code
         run: bash tests/hooks.sh
+
+      - name: Test du hook de début de session
+        run: bash tests/session-start.sh
+
+      - name: Test du contrôle du journal
+        run: bash tests/verifier-journal.sh
 
       - name: Test de la vérification de la revue IA
         run: bash tests/verifier-revue-ia.sh
@@ -48,6 +55,21 @@ jobs:
 
       - name: Test du hook pre-commit
         run: bash tests/pre-commit.sh
+
+  journal:
+    name: Journal
+    # Un fichier de journal par branche, jamais modifié après son merge (spec 004)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Contrôle du journal de la PR
+        run: >-
+          .github/scripts/verifier-journal.sh
+          "origin/${{ github.base_ref }}" HEAD
 
   secrets:
     name: Détection de secrets

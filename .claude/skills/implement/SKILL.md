@@ -8,7 +8,7 @@ argument-hint: <chemin de la spec>
 Implémente la spec : $ARGUMENTS
 
 1. Vérifie que la spec a le statut « validée ». Sinon, arrête-toi et dis-le.
-2. Crée une branche `feat/<nom-court>` depuis `main` à jour.
+2. Crée une branche `feat/<nom-court>` depuis `main` à jour, et son fichier de journal (section « Reprise de session » de `CLAUDE.md`). À chaque commit, ajoute ou complète l'entrée du jour, puis pousse la branche.
 3. Délègue au subagent `test-writer` l'écriture des tests couvrant chaque critère d'acceptation.
 4. Lance les tests et montre-moi qu'ils échouent pour la bonne raison. Attends mon accord avant d'implémenter.
 5. Implémente le minimum pour faire passer les tests. Ne modifie aucun test : si un test te semble faux, arrête-toi et explique pourquoi.

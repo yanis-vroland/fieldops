@@ -26,18 +26,18 @@ Les mots de passe des comptes fictifs sont documentés dans le README (ce sont d
 
 Données fictives
 
-- CA1 : Étant donné une base vide, quand on lance `docker compose up`, alors le jeu de données est chargé automatiquement, et l'on peut se connecter avec les comptes documentés dans le README.
+- CA1 : Étant donné une base vide et `SEED_ON_EMPTY=true` (valeur fixée dans `docker-compose.yml`), quand l'API démarre, alors le jeu de données est chargé après les migrations et avant d'accepter des requêtes, et l'on peut se connecter avec les comptes documentés dans le README. Sans `SEED_ON_EMPTY=true`, rien n'est chargé.
 - CA2 : Étant donné une base déjà peuplée, quand l'API redémarre ou que l'on relance le chargement, alors aucune donnée n'est dupliquée ni écrasée (chargement seulement si la base est vide).
-- CA3 : Étant donné la commande `pnpm --filter api seed:reset`, quand on la lance sur l'environnement local, alors la base est vidée et le jeu de données rechargé ; avec `NODE_ENV=production`, la commande refuse de s'exécuter.
+- CA3 : Étant donné la commande `pnpm --filter api seed:reset`, quand on la lance avec `ALLOW_SEED_RESET=true`, alors la base est vidée et le jeu de données rechargé ; sans cette variable, quelle que soit la valeur de `NODE_ENV`, la commande refuse de s'exécuter et ne touche à rien.
 - CA4 : Étant donné le jeu de données chargé, quand on appelle `GET /v1/machines/by-code/PRS-003`, alors on obtient la presse n°3, avec au moins une intervention corrective `done` dans son historique et des pièces compatibles en stock.
 - CA5 : Étant donné le jeu de données chargé, quand on vérifie ses invariants, alors ils sont tous respectés : quantités réservées égales à la somme des réservations `active`, quantités physiques égales à la somme des mouvements, statuts et dates d'intervention cohérents avec les transitions de la spec 007.
-- CA6 : Étant donné le jeu de données, quand on le passe en revue, alors aucun nom propre ne correspond à une entreprise ou une personne réelle connue (noms inventés, domaine e-mail `fieldops.example`).
+- CA6 : Étant donné le jeu de données, quand on le vérifie, alors tous les e-mails sont sur le domaine réservé `fieldops.example`, et tous les noms de personnes, d'entreprise et de sites proviennent de listes de noms inventés versionnées avec le seed.
 
 Publication du contrat
 
 - CA7 : Étant donné le contrat `apps/api/openapi.json` sur `main`, quand on le lit, alors `info.version` vaut `1.0.0` à la fin de la phase 1, et chaque route de la phase 1 y figure avec ses schémas.
 - CA8 : Étant donné une PR qui retire ou modifie de façon incompatible une route, un champ obligatoire ou un type du contrat, quand la CI s'exécute, alors elle échoue tant que la version majeure n'a pas été augmentée (comparaison avec le contrat de `main`).
-- CA9 : Étant donné une version du contrat mergée sur `main`, quand la CI de `main` s'exécute, alors le contrat est joint comme artefact au workflow, et une release GitHub `api-v<version>` contenant `openapi.json` est créée si la version n'existe pas encore.
+- CA9 : Étant donné une version du contrat mergée sur `main`, quand la CI de `main` s'exécute, alors le contrat est joint comme artefact au workflow, et une release GitHub `api-v<version>` contenant `openapi.json` est créée si la version n'existe pas encore. Ce job seul reçoit le droit d'écriture sur le dépôt (`contents: write`), et seulement sur `main`.
 
 ## Cas limites et erreurs
 

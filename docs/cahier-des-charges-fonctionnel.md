@@ -26,10 +26,11 @@ Il n'y a ni inscription ni administration des comptes : les utilisateurs fictifs
 | Sortie de stock (`issue`) | oui | oui |
 | Créer, modifier, affecter, annuler une intervention | non | oui |
 | Démarrer, clôturer une intervention | seulement s'il y est affecté | non |
+| Compléter la description d'une intervention en cours | seulement s'il y est affecté | oui (et tous les autres champs) |
 | Réserver, modifier, libérer des pièces pour une intervention | seulement s'il y est affecté | oui |
 | Consulter le journal d'audit | non | oui |
 
-Toute écriture, réussie ou refusée, est tracée dans le journal d'audit (spec 004).
+Toute écriture, réussie ou refusée, est tracée dans le journal d'audit (spec 004). Cette matrice résume les specs 003 à 008, qui font foi et la testent.
 
 ## Glossaire
 
@@ -86,7 +87,7 @@ stateDiagram-v2
 
 - Réserver bloque la quantité sans la sortir du stock ; la clôture la sort ; l'annulation la libère.
 - Stock insuffisant : réservation refusée. Pas de réservation partielle ni de commande fournisseur.
-- À la clôture, le technicien peut déclarer une quantité réellement utilisée inférieure : le reste est libéré.
+- À la clôture, le technicien peut déclarer une quantité réellement utilisée inférieure : le reste est libéré ; une quantité nulle libère toute la réservation.
 
 ## Parcours utilisateur
 
@@ -113,7 +114,7 @@ Le copilote (phase 2) consulte, propose et n'agit qu'après confirmation de l'ut
 
 | Phase | Fonctionnalité | Spec | Statut |
 | --- | --- | --- | --- |
-| 0 | Socle : API vide, contrôle de santé, contrat, plateforme Docker | [001](specs/001-socle.md) | validée, implémentée (PR #8) |
+| 0 | Socle : API vide, contrôle de santé, contrat, plateforme Docker | [001](specs/001-socle.md) | validée ; implémentation en PR #8 |
 | 1 | Conventions communes (erreurs, validation, pagination) | [002](specs/002-conventions-api.md) | brouillon |
 | 1 | Identification et droits | [003](specs/003-identification-et-droits.md) | brouillon |
 | 1 | Journal d'audit | [004](specs/004-journal-audit.md) | brouillon |

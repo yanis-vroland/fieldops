@@ -45,7 +45,7 @@ Pièces
 
 Stock
 
-- CA5 : Étant donné une pièce sans stock sur un site, quand un responsable enregistre une entrée (`POST /v1/stock-movements`, type `receipt`) sur ce site, alors la ligne de stock est créée avec la quantité reçue.
+- CA5 : Étant donné une pièce sans ligne de stock sur un site, quand un responsable enregistre une entrée (`POST /v1/stock-movements`, type `receipt`) ou un ajustement positif sur ce site, alors la ligne de stock est créée avec cette quantité et un seuil d'alerte à 0 ; une sortie ou un ajustement négatif sur une ligne inexistante est refusé (409).
 - CA6 : Étant donné une ligne de stock, quand on appelle `GET /v1/stock-items`, alors chaque ligne indique pièce, site, quantités physique, réservée et disponible, seuil, et un indicateur `belowThreshold` ; la liste est filtrable par `siteId`, `partId` et `belowThreshold=true`.
 - CA7 : Étant donné une sortie (`issue`) dont la quantité dépasse la quantité disponible, quand on l'enregistre, alors l'API répond 409 et le stock ne change pas.
 - CA8 : Étant donné un ajustement qui rendrait la quantité physique négative ou inférieure à la quantité réservée, quand on l'enregistre, alors l'API répond 409.

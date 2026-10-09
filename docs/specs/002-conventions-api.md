@@ -14,7 +14,7 @@ En tant que client de l'API (app mobile, serveur MCP, développeur), je veux des
 Erreurs
 
 - CA1 : Étant donné n'importe quelle route, quand l'API renvoie une erreur (4xx ou 5xx), alors la réponse a le type `application/problem+json` et contient `type`, `title`, `status` (égal au code HTTP) et `detail`.
-- CA2 : Étant donné une route inconnue, quand on l'appelle, alors l'API répond 404 au format du CA1. Cela remplace le format du CA16 de la spec 001.
+- CA2 : Étant donné une route inconnue, quand on l'appelle, avec ou sans jeton, alors l'API répond 404 au format du CA1. Cela remplace le format du CA16 de la spec 001.
 - CA3 : Étant donné une erreur inattendue dans le code, quand elle remonte jusqu'à la réponse, alors l'API répond 500 au format du CA1, sans trace d'exécution ni message technique dans le corps, et l'erreur complète est écrite dans les journaux du serveur.
 
 Validation
@@ -33,7 +33,18 @@ Routes et contrat
 
 - CA10 : Étant donné les routes métier de la phase 1, quand on lit le contrat OpenAPI, alors elles sont toutes sous `/v1`, et `/health` reste hors version.
 - CA11 : Étant donné le contrat OpenAPI, quand on le lit, alors chaque route documente ses réponses d'erreur avec le schéma RFC 9457, et chaque route de liste documente `limit`, `offset` et la forme paginée.
-- CA12 : Étant donné l'API démarrée sur une base vide, quand elle démarre, alors elle applique les migrations en attente ; quand elle redémarre, alors elle n'en réapplique aucune.
+- CA12 : Étant donné l'API démarrée sur une base vide, quand elle démarre, alors elle applique les migrations en attente avant d'accepter des requêtes ; quand elle redémarre, alors elle n'en réapplique aucune.
+
+Ordre des contrôles
+
+- CA13 : Étant donné une requête qui enfreint plusieurs règles à la fois, quand l'API la traite, alors elle renvoie l'erreur du premier contrôle qui échoue, dans cet ordre :
+  1. route inconnue : 404, même sans jeton ;
+  2. identification (route `/v1` hors connexion) : 401 ;
+  3. rôle autorisé sur la route : 403 ;
+  4. validation des paramètres et du corps : 400 ;
+  5. existence de la ressource visée : 404 ;
+  6. droit sur cette ressource (par exemple technicien affecté) : 403 ;
+  7. état de la ressource et règles métier (transition, stock, unicité) : 409.
 
 ## Cas limites et erreurs
 

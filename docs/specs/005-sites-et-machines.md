@@ -19,14 +19,14 @@ En tant que responsable maintenance, je veux tenir à jour la liste des sites et
   - un état : `in_service`, `stopped` (arrêt prévu) ou `broken_down` (en panne).
 - Types de machine : `press`, `conveyor`, `compressor`, `cnc_machine`, `robot`, `pump`, `other`.
 - Le code d'un site ou d'une machine ne change jamais une fois créé, et n'est jamais réattribué, même après archivage.
-- Un site ne peut pas être archivé s'il a des machines non archivées.
+- Un site ne peut pas être archivé s'il a des machines non archivées, du stock physique, une réservation active ou un utilisateur actif rattaché.
 - Une machine peut changer de site (déménagement).
 
 ## Droits
 
 - Lecture : tout utilisateur connecté.
 - Création, modification, archivage des sites et des machines : `manager`.
-- Changement d'état d'une machine : `manager` et `technician`.
+- Changement d'état d'une machine : `manager` et `technician`, sur toutes les machines (un technicien peut intervenir en renfort sur un autre site).
 
 ## Critères d'acceptation
 
@@ -36,7 +36,7 @@ Sites
 - CA2 : Étant donné un site existant, actif ou archivé, quand on crée un site avec le même code, alors l'API répond 409.
 - CA3 : Étant donné des sites, quand on appelle `GET /v1/sites`, alors on obtient la liste paginée triée par code, sans les sites archivés sauf `includeArchived=true`.
 - CA4 : Étant donné un site, quand un responsable modifie son nom ou sa ville, alors l'API répond 200 ; quand le corps contient `code`, alors l'API répond 400.
-- CA5 : Étant donné un site sans machine active, quand un responsable l'archive (`POST /v1/sites/{id}/archive`), alors `archivedAt` est renseigné ; si le site a des machines actives, alors l'API répond 409.
+- CA5 : Étant donné un site sans machine active, sans stock physique, sans réservation active et sans utilisateur actif rattaché, quand un responsable l'archive (`POST /v1/sites/{id}/archive`), alors `archivedAt` est renseigné ; si l'une de ces conditions n'est pas remplie, alors l'API répond 409 avec un `detail` qui la nomme.
 
 Machines
 

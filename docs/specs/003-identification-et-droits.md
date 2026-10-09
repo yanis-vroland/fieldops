@@ -35,13 +35,13 @@ Jeton
 Utilisateurs
 
 - CA9 : Étant donné un utilisateur connecté (tout rôle), quand il appelle `GET /v1/users`, alors il obtient la liste paginée des utilisateurs actifs, triée par nom, filtrable par `role` et par `siteId`, sans mot de passe ni empreinte.
-- CA10 : Étant donné un utilisateur connecté, quand il appelle `GET /v1/users/{id}`, alors il obtient le profil ; 404 si l'utilisateur n'existe pas.
+- CA10 : Étant donné un utilisateur connecté, quand il appelle `GET /v1/users/{id}`, alors il obtient le profil, y compris pour un utilisateur archivé (avec `archivedAt` renseigné, pour afficher l'historique des interventions) ; 404 si l'utilisateur n'existe pas.
 
 Sécurité
 
 - CA11 : Étant donné un utilisateur en base, quand on lit sa ligne dans la table, alors le mot de passe n'y figure qu'en empreinte argon2id.
 - CA12 : Étant donné une connexion réussie ou échouée, quand on lit les journaux du serveur et le journal d'audit, alors le mot de passe n'y apparaît jamais.
-- CA13 : Étant donné l'API lancée sans `JWT_SECRET` avec `NODE_ENV=production`, quand elle démarre, alors elle s'arrête avec un message qui nomme `JWT_SECRET`. En développement, une valeur fictive par défaut s'applique.
+- CA13 : Étant donné l'API lancée sans `JWT_SECRET`, ou avec une valeur de moins de 32 caractères, quel que soit `NODE_ENV`, quand elle démarre, alors elle s'arrête avec un message qui nomme `JWT_SECRET`. Il n'y a pas de valeur par défaut dans le code : `docker-compose.yml` et la CI fournissent une valeur fictive explicite, réservée au local.
 
 ## Cas limites et erreurs
 

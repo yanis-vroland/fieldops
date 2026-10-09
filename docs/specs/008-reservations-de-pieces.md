@@ -21,7 +21,11 @@ En tant que responsable maintenance ou technicien, je veux réserver les pièces
 - Une intervention a au plus une réservation `active` par pièce : réserver de nouveau la même pièce augmente la quantité de la réservation existante.
 - Clôture de l'intervention (spec 007) : toutes ses réservations `active` passent à `consumed`, dans la même transaction que la clôture.
 - Annulation de l'intervention : toutes ses réservations `active` passent à `released`, dans la même transaction.
-- La quantité consommée peut être corrigée à la clôture (pièce finalement non utilisée, ou utilisée en partie) : la différence est libérée.
+- La quantité consommée peut être corrigée à la clôture, par la liste facultative `usedParts` (`partId`, `quantity`) du corps de clôture (spec 007, CA10) :
+  - sans `usedParts`, ou pour une pièce réservée absente de `usedParts`, toute la quantité réservée est consommée ;
+  - une quantité utilisée inférieure à la quantité réservée : seule la quantité utilisée sort du stock, le reste est libéré, et la réservation passe à `consumed` avec sa quantité consommée (`consumedQuantity`) ;
+  - une quantité utilisée nulle : aucune sortie de stock, la réservation passe à `released` ;
+  - une pièce de `usedParts` sans réservation active sur l'intervention, ou une quantité supérieure à la quantité réservée : la clôture est refusée (400) et rien ne change.
 
 ## Droits
 
@@ -37,12 +41,15 @@ En tant que responsable maintenance ou technicien, je veux réserver les pièces
 - CA6 : Étant donné une réservation `active`, quand on modifie sa quantité (`PATCH /v1/reservations/{id}`), alors la quantité réservée du stock suit ; une hausse au-delà du disponible est refusée (409).
 - CA7 : Étant donné une réservation `active`, quand on la libère (`POST /v1/reservations/{id}/release`), alors elle passe à `released` et la quantité redevient disponible.
 - CA8 : Étant donné une intervention `in_progress` avec des réservations `active`, quand le technicien la clôture, alors chaque réservation passe à `consumed`, un mouvement `issue` rattaché à l'intervention est créé pour chaque pièce, et les quantités physique et réservée baissent d'autant.
-- CA9 : Étant donné une clôture qui précise une quantité réellement utilisée (`usedParts` : `partId`, `quantity`) inférieure à la quantité réservée, quand elle est enregistrée, alors seule la quantité utilisée sort du stock et le reste est libéré ; une quantité utilisée supérieure à la quantité réservée est refusée (400).
-- CA10 : Étant donné une intervention avec des réservations `active`, quand un responsable l'annule, alors chaque réservation passe à `released` et les quantités redeviennent disponibles.
-- CA11 : Étant donné un technicien qui n'est pas affecté à l'intervention, quand il réserve, modifie ou libère, alors l'API répond 403.
-- CA12 : Étant donné deux réservations simultanées de la même pièce sur le même site dont la somme dépasse la quantité disponible, quand elles arrivent en même temps, alors une seule réussit et l'autre reçoit 409.
-- CA13 : Étant donné une réservation `consumed` ou `released`, quand on tente de la modifier ou de la libérer, alors l'API répond 409.
-- CA14 : Étant donné une intervention, quand on appelle `GET /v1/interventions/{id}/reservations`, alors on obtient ses réservations (tous statuts) avec pièce, quantité et statut.
+- CA9 : Étant donné une clôture avec `usedParts` qui indique pour une pièce une quantité inférieure à la quantité réservée, quand elle est enregistrée, alors seule la quantité utilisée sort du stock, le reste redevient disponible, et la réservation est `consumed` avec `consumedQuantity` égale à la quantité utilisée.
+- CA10 : Étant donné une clôture avec `usedParts` qui indique une quantité nulle pour une pièce, quand elle est enregistrée, alors aucun mouvement n'est créé pour cette pièce et sa réservation passe à `released`.
+- CA11 : Étant donné une clôture avec `usedParts` qui omet une pièce réservée, quand elle est enregistrée, alors toute la quantité réservée de cette pièce est consommée.
+- CA12 : Étant donné une clôture avec `usedParts` qui cite une pièce sans réservation active, ou une quantité supérieure à la quantité réservée, quand on l'envoie, alors l'API répond 400 et ni l'intervention, ni les réservations, ni le stock ne changent.
+- CA13 : Étant donné une intervention avec des réservations `active`, quand un responsable l'annule, alors chaque réservation passe à `released` et les quantités redeviennent disponibles.
+- CA14 : Étant donné un technicien qui n'est pas affecté à l'intervention, quand il réserve, modifie ou libère, alors l'API répond 403.
+- CA15 : Étant donné deux réservations simultanées de la même pièce sur le même site dont la somme dépasse la quantité disponible, quand elles arrivent en même temps, alors une seule réussit et l'autre reçoit 409.
+- CA16 : Étant donné une réservation `consumed` ou `released`, quand on tente de la modifier ou de la libérer, alors l'API répond 409.
+- CA17 : Étant donné une intervention, quand on appelle `GET /v1/interventions/{id}/reservations`, alors on obtient ses réservations (tous statuts) avec pièce, quantité et statut.
 
 ## Cas limites et erreurs
 

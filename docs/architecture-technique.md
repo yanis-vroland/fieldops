@@ -44,7 +44,7 @@ Un module NestJS par domaine, dans `apps/api/src/` :
 | `common` | filtre d'erreurs RFC 9457, pagination, validation | 002 |
 | `auth` | connexion, guards JWT et rôles | 003 |
 | `users` | utilisateurs (lecture) | 003 |
-| `audit` | intercepteur d'audit, `GET /v1/audit-entries` | 004 |
+| `audit` | enregistrement des écritures (intercepteur pour les succès, filtre d'exceptions global pour les refus, y compris les 401 et 403 levés par les guards), `GET /v1/audit-entries` | 004 |
 | `sites`, `machines` | sites et machines | 005 |
 | `parts`, `stock` | pièces, stock, mouvements | 006 |
 | `interventions` | interventions et transitions | 007 |
@@ -144,16 +144,20 @@ erDiagram
     uuid partId FK
     uuid siteId FK
     decimal quantity
+    decimal consumedQuantity
     enum status
   }
   AUDIT_ENTRY {
     uuid id PK
     uuid userId FK
+    enum userRole
     enum origin
     string method
     string route
+    string resourceType
     string resourceId
-    jsonb body
+    jsonb requestBody
+    string loginEmail
     int statusCode
     timestamp createdAt
   }
@@ -167,7 +171,9 @@ Toutes les tables ont `createdAt` et `updatedAt`. Contraintes en base, en plus d
 
 - Les opérations qui touchent au stock (mouvements, réservations, clôture et annulation d'intervention) s'exécutent dans une transaction, avec verrouillage de la ligne de stock (`SELECT … FOR UPDATE`) : deux opérations simultanées ne peuvent pas dépasser le disponible (specs 006, 007, 008).
 - Les transitions d'intervention verrouillent l'intervention et vérifient le statut dans la même transaction.
-- L'entrée d'audit d'une écriture réussie est enregistrée dans la même transaction que l'écriture (spec 004, CA8).
+- L'entrée d'audit d'une écriture réussie est enregistrée dans la même transaction que l'écriture (spec 004, CA11) ; celle d'une écriture refusée, dans une transaction séparée (spec 004, CA12).
+- Ordre des contrôles d'une requête : route, identification, rôle, validation, existence, droit sur la ressource, état (spec 002, CA13).
+- Au démarrage : migrations, puis jeu de données si `SEED_ON_EMPTY=true` et base vide, puis ouverture du port (specs 002 et 009). Une seule instance de l'API : pas d'exécution concurrente.
 
 ### Conventions (ADR-003)
 
@@ -180,10 +186,11 @@ Toutes les tables ont `createdAt` et `updatedAt`. Contraintes en base, en plus d
 
 | Sujet | Mesure | Référence |
 | --- | --- | --- |
-| Identification | JWT HS256, 8 h, `JWT_SECRET` obligatoire en production | ADR-004, spec 003 |
+| Identification | JWT HS256, 8 h, `JWT_SECRET` toujours obligatoire (32 caractères minimum, pas de valeur par défaut dans le code) | ADR-004, spec 003 |
 | Mots de passe | argon2id, jamais renvoyés ni journalisés | spec 003 |
 | Droits | guards par rôle, vérification de l'affectation pour les actions du technicien | specs 003, 005 à 008 |
-| Audit | toute écriture tracée, champs sensibles masqués, entrées non modifiables | spec 004 |
+| Audit | toute écriture tracée, réussie ou refusée ; champs sensibles masqués à toute profondeur ; entrées non modifiables | spec 004 |
+| Données de démonstration | chargement seulement avec `SEED_ON_EMPTY=true` ; remise à zéro seulement avec `ALLOW_SEED_RESET=true` | spec 009 |
 | Entrées | validation en liste blanche, UUID contrôlés, corps JSON uniquement | spec 002 |
 | Erreurs | aucune trace technique dans les réponses 500 | spec 002 |
 | Secrets du dépôt | hook pre-commit gitleaks, analyse CI de tout l'historique, hook `protect-secrets` pour l'agent | template |

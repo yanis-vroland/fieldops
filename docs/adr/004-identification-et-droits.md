@@ -19,12 +19,12 @@ Décision :
 - Connexion : `POST /v1/auth/login` avec e-mail et mot de passe, réponse avec un jeton d'accès JWT (signature HS256, durée de vie 8 heures, une journée de travail) et le profil de l'utilisateur. Pas de jeton de rafraîchissement en phase 1.
 - Mots de passe : hachés avec argon2id (bibliothèque `argon2`), jamais renvoyés ni journalisés.
 - Jeton : `Authorization: Bearer <jeton>` sur toutes les routes `/v1`, sauf `/v1/auth/login`. Il porte l'identifiant de l'utilisateur et son rôle.
-- Secret de signature : variable d'environnement `JWT_SECRET`, obligatoire hors développement ; une valeur fictive par défaut dans `docker-compose.yml`.
+- Secret de signature : variable d'environnement `JWT_SECRET`, toujours obligatoire, d'au moins 32 caractères ; aucune valeur par défaut dans le code. `docker-compose.yml` et la CI fournissent une valeur fictive explicite, réservée au local.
 - Rôles : `technician` et `manager`. Les droits sont vérifiés par des guards NestJS (`@nestjs/jwt`, sans Passport), déclarés par un décorateur sur chaque route.
 - Utilisateurs : créés par le seed (spec 009). Pas d'inscription, pas de route de création d'utilisateur en phase 1.
 
 Conséquences :
 - Pas de révocation d'un jeton avant expiration : acceptable pour des données fictives, à revoir si l'API est exposée publiquement.
-- Le secret par défaut ne protège rien : il est réservé au développement local, et la documentation le dit.
+- La valeur fictive de `docker-compose.yml` est publique et ne protège rien : elle est réservée au local, et la documentation le dit. Oublier de la remplacer ailleurs reste possible ; l'absence de valeur par défaut dans le code évite au moins qu'un environnement démarre sans secret explicite.
 - Le serveur MCP et les agents (phase 4) relaieront le jeton de l'utilisateur, ou recevront un compte de service : à trancher par un ADR en phase 4.
 - Dépendances : `@nestjs/jwt`, `argon2`.

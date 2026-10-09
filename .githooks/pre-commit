@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Bloque le commit si gitleaks détecte un secret dans les fichiers indexés.
+# Activation : git config core.hooksPath .githooks
+set -u
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo "pre-commit : gitleaks n'est pas installé, commit refusé." >&2
+  echo "Installe-le (https://github.com/gitleaks/gitleaks#installing), puis relance le commit." >&2
+  exit 1
+fi
+
+if ! gitleaks git --staged --redact --verbose --no-banner --log-level warn; then
+  echo "pre-commit : secret potentiel détecté dans les fichiers indexés, commit refusé." >&2
+  echo "Retire-le de l'index (git restore --staged <fichier>) avant de recommencer." >&2
+  exit 1
+fi

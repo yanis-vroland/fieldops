@@ -3,7 +3,7 @@
 Statut : brouillon
 Date : 2026-10-09
 
-Phase 1. Glossaire : `PartReservation` ([`docs/vision.md`](../vision.md#domaine-métier)). S'appuie sur les specs 006 (stock) et 007 (interventions).
+Phase 1. Glossaire : `PartReservation` ([cahier des charges](../cahier-des-charges-fonctionnel.md#glossaire)). S'appuie sur les specs 006 (stock) et 007 (interventions).
 
 ## Besoin
 

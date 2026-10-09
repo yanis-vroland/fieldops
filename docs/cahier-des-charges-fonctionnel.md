@@ -1,6 +1,6 @@
 # Cahier des charges fonctionnel
 
-Vue d'ensemble fonctionnelle de FieldOps : qui fait quoi, selon quelles règles. Ce document résume et relie ; le détail testable est dans les specs (`docs/specs/`), qui font foi en cas d'écart. Le contexte (pourquoi, périmètre, phases) est dans [`vision.md`](vision.md). Le pendant technique est [`architecture-technique.md`](architecture-technique.md).
+Vue d'ensemble fonctionnelle de FieldOps : qui fait quoi, selon quelles règles. Ce document résume et relie ; le détail testable est dans les specs (`docs/specs/`), qui font foi en cas d'écart. Le contexte (pourquoi, périmètre, phases) est dans [`vision.md`](vision.md). Ce document est la référence pour les acteurs, le glossaire et les règles métier ; il est mis à jour dans la PR qui les change. Le pendant technique est [`architecture-technique.md`](architecture-technique.md).
 
 Statut : phase 1 rédigée, en attente de validation. Les règles métier de la phase 1 reprennent les réponses par défaut proposées par l'agent et acceptées en bloc par Yanis le 2026-10-09 : chacune reste ouverte à correction à la relecture.
 
@@ -34,10 +34,17 @@ Toute écriture, réussie ou refusée, est tracée dans le journal d'audit (spec
 
 ## Glossaire
 
-Le glossaire de référence est dans [`vision.md`](vision.md#domaine-métier). Compléments de la phase 1 :
+Les specs, le code et les PR utilisent ces termes, et aucun synonyme. Le code est en anglais.
 
 | Terme | Dans le code | Définition |
 | --- | --- | --- |
+| Site | `Site` | Usine ou atelier où se trouvent des machines |
+| Machine | `Machine` | Équipement maintenu, rattaché à un site, identifié de façon unique |
+| Intervention | `Intervention` | Opération de maintenance (préventive ou corrective) sur une machine, avec un statut et un technicien affecté |
+| Pièce | `Part` | Référence de pièce détachée |
+| Stock | `StockItem` | Quantité disponible d'une pièce, sur un site |
+| Réservation | `PartReservation` | Pièce réservée pour une intervention |
+| Technicien | `Technician` | Personne qui réalise les interventions |
 | Code de machine | `Machine.code` | Identifiant lisible et définitif d'une machine, partagé par toutes les briques (`PRS-003`) |
 | Mouvement de stock | `StockMovement` | Entrée, sortie ou ajustement ; la quantité physique en est la somme |
 | Quantité disponible | `StockItem.quantityAvailable` | Quantité physique moins quantité réservée |

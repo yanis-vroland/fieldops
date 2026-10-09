@@ -1,0 +1,10 @@
+{
+  "name": "fieldops",
+  "private": true,
+  "description": "Plateforme fictive de maintenance industrielle avec IA intégrée",
+  "license": "MIT",
+  "packageManager": "pnpm@10.15.1",
+  "engines": {
+    "node": ">=24 <25"
+  }
+}

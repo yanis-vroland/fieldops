@@ -121,7 +121,7 @@ Le copilote (phase 2) consulte, propose et n'agit qu'après confirmation de l'ut
 
 | Phase | Fonctionnalité | Spec | Statut |
 | --- | --- | --- | --- |
-| 0 | Socle : API vide, contrôle de santé, contrat, plateforme Docker | [001](specs/001-socle.md) | validée ; implémentation en PR #8 |
+| 0 | Socle : API vide, contrôle de santé, contrat, plateforme Docker | [001](specs/001-socle.md) | livrée (PR #8) |
 | 1 | Conventions communes (erreurs, validation, pagination) | [002](specs/002-conventions-api.md) | validée |
 | 1 | Identification et droits | [003](specs/003-identification-et-droits.md) | validée |
 | 1 | Journal d'audit | [004](specs/004-journal-audit.md) | validée |

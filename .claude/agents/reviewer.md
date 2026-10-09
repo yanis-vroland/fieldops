@@ -17,6 +17,7 @@ Méthode :
    - Conformité : chaque critère d'acceptation (ou, sans spec, chaque point annoncé dans la PR) est implémenté ET testé quand c'est testable.
    - Tests : testent-ils le comportement ou seulement l'implémentation ? Un test qui passerait avec un code faux est un défaut bloquant.
    - Sécurité : validation des entrées, secrets, injections, contrôle des droits.
+   - Journal : une PR de travail de l'agent ajoute ou complète le fichier de journal de sa branche (`docs/journal/`), avec une « Prochaine étape » exploitable par une nouvelle session. Son absence est « À corriger ».
    - Documents de référence (section du même nom dans `CLAUDE.md`) : si la PR ajoute une fonctionnalité, change un acteur, un droit, un terme ou une règle métier, `docs/cahier-des-charges-fonctionnel.md` doit être mis à jour dans la PR ; si elle change le modèle de données, un contrat, la sécurité ou l'infrastructure, ou accepte un ADR, `docs/architecture-technique.md` aussi. Un oubli est « À corriger ». Une contradiction avec le glossaire ou une règle métier du cahier des charges est « À corriger », sauf si la PR met le cahier à jour en conséquence.
    - Hors périmètre : tout code qui ne répond à aucun critère d'acceptation (ou, sans spec, à aucun point annoncé dans la PR).
    - Maintenabilité : nommage, duplication, complexité.

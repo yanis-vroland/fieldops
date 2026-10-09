@@ -12,7 +12,7 @@ FieldOps : plateforme fictive de maintenance industrielle (machines, interventio
 
 Tout est fictif : entreprises, sites, machines, documents et personnes. Aucune donnée réelle, aucun code ni nom issu d'un client ou d'un employeur. Les jeux de données, fixtures et exemples sont inventés.
 
-Phase en cours : 0 (socle), implémentée par la [spec 001](docs/specs/001-socle.md). Ordre des phases et critères de fin : [`docs/vision.md`](docs/vision.md#ordre-de-construction).
+Phase en cours : 1 (API cœur), specs 002 à 009 validées ; la phase 0 (socle, [spec 001](docs/specs/001-socle.md)) est livrée. État de chaque fonctionnalité : « Fonctionnalités par phase » du [cahier des charges](docs/cahier-des-charges-fonctionnel.md#fonctionnalités-par-phase). Ordre des phases et critères de fin : [`docs/vision.md`](docs/vision.md#ordre-de-construction).
 
 ## Stack et commandes
 
@@ -40,12 +40,15 @@ Garde-fous :
 - Tests des hooks de Claude Code : `bash tests/hooks.sh`
 - Test du hook pre-commit : `bash tests/pre-commit.sh`
 - Test de la vérification de la revue IA : `bash tests/verifier-revue-ia.sh`
+- Test du hook de début de session : `bash tests/session-start.sh`
+- Test du contrôle du journal : `bash tests/verifier-journal.sh`
 - Lint des scripts shell : `shellcheck .claude/hooks/*.sh .githooks/pre-commit .github/scripts/*.sh tests/*.sh`
 
 ## Langue
 
 - Code en anglais : variables, fonctions, classes, entités, tables, routes d'API.
 - Tout le reste en français : README, ADR, specs, commentaires, messages de commit, PR.
+- Réponses à l'humain en français, y compris les points d'étape et les messages courts pendant une tâche longue.
 - Commits au format Conventional Commits, préfixe en anglais, message en français :
   `feat: ajout du CRUD des machines`
 
@@ -66,11 +69,28 @@ Garde-fous :
 4. Face à un choix d'architecture structurant, s'arrêter et proposer un ADR dans `docs/adr/` au lieu de trancher seul. L'agent peut rédiger l'ADR en entier, au statut « proposé » ; il ne passe à « accepté » et n'est mergé qu'après validation humaine ([ADR-002 du template](https://github.com/yanis-vroland/agentic-dev-workflow/blob/main/docs/adr/002-place-revue-humaine.md)).
 5. Après la revue IA d'une PR, et une fois les corrections poussées, publier un commentaire `## Réponse à la revue IA` dans la PR. Chaque point du rapport y reçoit une suite : corrigé (avec le SHA du commit), non suivi et pourquoi, ou reporté (avec l'issue). La description de la PR renvoie vers ce commentaire sans le répéter. Ne pas se contenter de modifier la description : cela ne laisse aucune trace dans la chronologie et ne notifie personne.
 
+## Reprise de session
+
+Le dépôt est la seule mémoire : une session doit pouvoir être fermée à tout moment et reprise plus tard, sur n'importe quel poste, sans perte ([spec 004](https://github.com/yanis-vroland/agentic-dev-workflow/blob/main/docs/specs/004-reprise-de-session.md)).
+
+- Ne jamais enregistrer une règle, une décision ou un état dans la mémoire locale de Claude Code (désactivée par `autoMemoryEnabled` dans `.claude/settings.json`). Une règle de travail va dans `CLAUDE.md`, un skill ou un subagent, par une PR ; un état va dans le journal de la branche.
+- Journal : un fichier par branche, `docs/journal/AAAA-MM-JJ-<branche>.md` (`/` remplacés par `-`, date de création), créé au premier commit de la branche. Chaque entrée commence par `## AAAA-MM-JJ HH:MM` (heure locale) et contient quatre rubriques : **Fait**, **Décisions** (et qui a décidé), **Corrections et limites**, **Prochaine étape**.
+- À chaque commit de travail : ajouter une entrée ou compléter celle du jour dans le même commit, puis pousser la branche.
+- Ne jamais modifier le fichier de journal d'une autre branche, ni un fichier déjà mergé : la CI le refuse (`verifier-journal.sh`).
+- Au début d'une session, le hook `session-start.sh` met la branche à jour si c'est sans risque, et affiche son état et la dernière entrée de journal. Repartir de la « Prochaine étape » de cette entrée. Si la branche est en retard sur `main`, proposer un rebase sans le faire.
+
+## Organisation des PR et des phases
+
+- Une seule PR ouverte à la fois, toujours basée sur `main` (`gh pr create --base main`). Si un travail dépend d'une PR non mergée, attendre son merge, ou regrouper les deux dans la même PR. Constat du 2026-10-09 : la PR #7, basée sur la branche de la #6, a été mergée dans cette branche après le merge de la #6, et n'est jamais arrivée sur `main`.
+- Une spec par PR (tests en échec, puis implémentation).
+- Validation groupée par phase : l'agent rédige toutes les specs d'une phase et pose toutes les questions métier en un seul lot, avec une réponse par défaut pour chacune. L'humain valide le lot, puis l'agent enchaîne les PR.
+
 ## Définition du « done »
 
 - Chaque critère d'acceptation de la spec est couvert par au moins un test.
 - Lint, format et tests au vert.
 - Aucun TODO sans ticket associé.
+- Entrée de journal de la branche à jour et poussée.
 - Documentation mise à jour si un comportement public change, dont le cahier des charges et l'architecture technique (section « Documents de référence »).
 
 ## Interdits
@@ -80,6 +100,7 @@ Garde-fous :
 - Ajouter une dépendance sans la justifier dans la PR.
 - Pousser directement sur `main`.
 - Merger une PR : seul l'humain merge ([ADR-002 du template](https://github.com/yanis-vroland/agentic-dev-workflow/blob/main/docs/adr/002-place-revue-humaine.md)).
+- Créer une issue ou poser un label sans l'accord de l'humain. Seule exception : le label `bug` sur une issue de bug.
 
 ## Documents de référence
 
@@ -127,5 +148,5 @@ Hors périmètre : données réelles, intégration ERP, paiement et facturation,
 Documentation (documents de référence : voir la section du même nom) :
 - `docs/specs/` : specs, numérotées (`001-…md`), rédigées avec `/spec` à partir de `docs/templates/spec.md`.
 - `docs/adr/` : décisions d'architecture, numérotées, rédigées par l'agent au statut « proposé », acceptées par l'humain.
-- `docs/journal.md` : journal de bord du travail avec l'agent.
+- `docs/journal/` : journal de bord, un fichier par branche avec des entrées datées ; sert à reprendre une session (section « Reprise de session »).
 - `.claude/`, `.githooks/`, `.github/`, `tests/` : garde-fous issus du template, à ne modifier qu'avec une spec.

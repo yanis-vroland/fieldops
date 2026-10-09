@@ -26,7 +26,7 @@ Documentation :
 
 ## Méthode
 
-Chaque évolution suit le même chemin : spec validée (`docs/specs/`), tests écrits avant le code, implémentation par l'agent, revue IA puis revue humaine de la PR. Les choix structurants passent par un ADR (`docs/adr/`). Le journal de bord (`docs/journal.md`) garde la trace de ce que l'agent a bien fait et de ce qui a été corrigé.
+Chaque évolution suit le même chemin : spec validée (`docs/specs/`), tests écrits avant le code, implémentation par l'agent, revue IA puis revue humaine de la PR. Les choix structurants passent par un ADR (`docs/adr/`). Le journal de bord (`docs/journal/`, un fichier par branche) garde la trace de ce que l'agent a bien fait, de ce qui a été corrigé et de la prochaine étape : une session peut être fermée et reprise sans perte, la mémoire locale de l'agent est désactivée.
 
 Règles de l'agent : [`CLAUDE.md`](CLAUDE.md).
 
